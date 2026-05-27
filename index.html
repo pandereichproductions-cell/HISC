@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HISC</title>
+  <style>
+    :root{
+      --bg:#f7f8fb; --card:#fff; --text:#182033; --muted:#667085;
+      --line:#e6e8ef; --accent:#2563eb; --cit:#fff4d6; --citText:#9a6700;
+      --radius:14px; --max:920px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+    .app{width:min(var(--max),calc(100% - 24px));margin:0 auto;padding:22px 0 40px}
+    .title{margin:0 0 16px;font-size:22px;letter-spacing:-.04em;font-weight:800}
+    .mode{display:flex;gap:8px;margin-bottom:18px}
+    .mode button{padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:white;color:var(--muted);font-weight:650}
+    .mode button.active{background:var(--accent);border-color:var(--accent);color:white}
+    .sectionTitle{margin:18px 0 9px;font-size:15px;color:#344054;font-weight:800}
+    .pills{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{display:flex;align-items:center;gap:9px;min-height:42px;padding:8px 11px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:0 1px 2px rgba(16,24,40,.04)}
+    .pill:hover{border-color:#bcd0ff;background:#fbfdff}
+    .num{width:22px;height:22px;display:grid;place-items:center;flex:none;border-radius:999px;background:#f1f3f8;color:#475467;font-size:12px;font-weight:800}
+    .abbr{font-size:12px;font-weight:900;color:#2563eb;background:#eff6ff;padding:3px 6px;border-radius:999px}
+    .name{font-size:14px;font-weight:750;white-space:nowrap}
+    .tag{padding:3px 6px;border-radius:999px;background:var(--cit);color:var(--citText);font-size:11px;font-weight:900}
+    .practice{display:none;background:white;border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:16px}
+    .practice.active{display:block}
+    .practiceTop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+    .practiceTop h2{margin:0;font-size:22px;letter-spacing:-.03em}
+    .smallBtn{padding:8px 11px;border-radius:10px;background:#f2f4f7;color:#344054;font-weight:700}
+    .counter{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .question{min-height:120px;display:grid;place-items:center;text-align:center;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:12px}
+    .question strong{display:block;font-size:25px;letter-spacing:-.03em}
+    .question span{display:block;margin-top:6px;color:var(--muted);font-size:14px}
+    .matrixImg{display:block;max-width:100%;max-height:58vh;margin:0 auto;border-radius:10px}
+    .matrixAnswers{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+    .matrixAnswers .answer{min-width:54px;text-align:center;font-weight:900;font-size:18px}
+
+    .digitMenu{
+	  display:grid;
+	  grid-template-columns:repeat(3,1fr);
+	  gap:6px;
+	  margin-bottom:8px;
+	}
+
+	.digitMenu button{
+	  padding:8px 4px;
+	  border-radius:10px;
+	  background:#fff;
+	  border:1px solid var(--line);
+	  font-weight:900;
+	  font-size:12px;
+	  line-height:1.1;
+	  color:#475467;
+	}
+
+	.digitMenu button.active{
+	  background:var(--accent);
+	  border-color:var(--accent);
+	  color:#fff;
+	}
+
+	.digitPanel{
+	  text-align:center;
+	  padding:2px 0;
+	}
+
+	.digitListen{
+	  font-size:15px;
+	  color:var(--muted);
+	  font-weight:700;
+	  height:22px;
+	  line-height:22px;
+	  margin-bottom:8px;
+	  visibility:visible;
+	}
+
+
+	.digitInput{
+	  font-size:28px;
+	  font-weight:900;
+	  color:#2563eb;
+
+	  min-height:34px;
+	  line-height:34px;
+
+	  margin:6px 0;
+	  letter-spacing:.04em;
+	}
+
+	.digitAnswer{
+	  font-size:16px;
+	  font-weight:900;
+	  color:#111827;
+
+	  min-height:24px;
+	  line-height:24px;
+
+	  margin-top:4px;
+	  padding:0 6px;
+	}
+
+	.playBtn{
+	  padding:8px 12px;
+	  border-radius:12px;
+	  background:#2563eb;
+	  color:white;
+	  font-weight:900;
+
+	  margin:1px auto 2px;
+
+	  display:inline-block;
+	}
+
+	.keypad{
+	  display:grid;
+	  grid-template-columns:repeat(3,1fr);
+	  gap:5px;
+	  max-width:340px;
+	  margin:6px auto 0;
+	}
+
+	.keypad.locked{
+	  pointer-events:none;
+	  opacity:.45;
+	}
+
+	.keyBtn{
+	  padding:9px;
+
+	  border-radius:12px;
+
+	  background:#fff;
+	  border:1px solid var(--line);
+
+	  font-size:20px;
+	  font-weight:900;
+	}
+
+	.keyBtn.ok{
+	  background:#2563eb;
+	  color:#fff;
+	  border-color:#2563eb;
+	}
+
+	.keyBtn.del{
+	  background:#f2f4f7;
+	}
+
+
+    /* ===== CUBOS ===== */
+    .cubeHud{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:8px;
+    }
+
+    .cubeTime{
+      font-size:22px;
+      font-weight:900;
+      color:#111827;
+      letter-spacing:-0.04em;
+    }
+
+    .cubeStats{
+      font-size:11px;
+      font-weight:800;
+      color:#667085;
+      text-align:right;
+      line-height:1.25;
+    }
+
+    .cubePanel{
+      width:100%;
+      display:grid;
+      gap:6px;
+      justify-items:center;
+    }
+
+    .cubeLabel{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .cubeBoards{
+      width:100%;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      align-items:start;
+    }
+
+    .cubeBox{
+      display:grid;
+      justify-items:center;
+      gap:6px;
+    }
+
+    .cubeReference{
+	  width:200px;
+	  height:200px;
+	  object-fit:contain;
+	  border:1px solid #d0d5dd;
+	  border-radius:6px;
+	  background:#fff;
+	  display:block;
+	}
+
+	.cubeGrid{
+	  display:grid;
+	  grid-template-columns:repeat(var(--gridSize, 2), var(--cubeSize, 78px));
+	  grid-template-rows:repeat(var(--gridSize, 2), var(--cubeSize, 78px));
+      border:1.5px solid #374151;
+      background:#374151;
+      gap:1.5px;
+      touch-action:manipulation;
+    }
+
+    .cubeGrid.target{
+      --cubeSize:78px;
+      pointer-events:none;
+    }
+
+    .cubeGrid.work{
+      --cubeSize:78px;
+    }
+	
+	.cubeGrid.work[style*="--gridSize:3"]{
+	  --cubeSize:56px;
+	}
+
+    /* Rotación 45º para diseños de Cubos girados */
+    .cubeGrid.work.rotated{
+      transform:rotate(45deg);
+      transform-origin:center;
+      margin:34px 0;
+    }
+
+    .cubeMini.rotatedMini{
+      transform:rotate(45deg);
+      transform-origin:center;
+    }
+
+
+    .cubeCell{
+      width:var(--cubeSize, 78px);
+      height:var(--cubeSize, 78px);
+      background:#fff;
+      position:relative;
+      overflow:hidden;
+      border:0;
+      display:block;
+    }
+
+    .cubeGrid.work .cubeCell{
+      cursor:pointer;
+    }
+	.cubeCell.E{
+	  background:#e5e7eb;
+	}
+
+    .cubeCell.W{background:#fff}
+    .cubeCell.R{background:#f40b0b}
+
+    /* Triángulos rojos. El otro triángulo queda blanco. */
+    .cubeCell.TR{
+      background:linear-gradient(45deg, #fff 0 49.4%, #f40b0b 50% 100%);
+    }
+
+    .cubeCell.BL{
+      background:linear-gradient(45deg, #f40b0b 0 49.4%, #fff 50% 100%);
+    }
+
+    .cubeCell.TL{
+      background:linear-gradient(135deg, #f40b0b 0 49.4%, #fff 50% 100%);
+    }
+
+    .cubeCell.BR{
+      background:linear-gradient(135deg, #fff 0 49.4%, #f40b0b 50% 100%);
+    }
+
+    .cubeTools{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:6px;
+      width:min(100%, 440px);
+      margin-top:14px;
+    }
+
+    .cubeTool{
+      display:grid;
+      place-items:center;
+      min-height:48px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:10px;
+      padding:4px;
+    }
+
+    .cubeTool.active{
+      border-color:#2563eb;
+      box-shadow:0 0 0 2px rgba(37,99,235,.16);
+    }
+
+    .cubeMini{
+      width:30px;
+      height:30px;
+      border:1px solid #475467;
+    }
+
+    .cubeActions{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .cubeStart,
+	.cubeCheck,
+	.cubeClear{
+	  padding:7px 10px;
+	  border-radius:10px;
+	  font-weight:800;
+	  font-size:13px;
+	}
+
+    .cubeStart,
+    .cubeCheck{
+      background:#2563eb;
+      color:#fff;
+    }
+
+    .cubeClear{
+      background:#f2f4f7;
+      color:#344054;
+    }
+
+    body.cubeFlashOk .question{
+      border-color:#86efac;
+      background:#f0fdf4;
+    }
+
+    body.cubeFlashBad .question{
+      border-color:#fca5a5;
+      background:#fef2f2;
+    }
+
+    @media(max-width:560px){
+      .cubeBoards{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+
+      .cubeGrid.target{
+        --cubeSize:58px;
+      }
+
+      .cubeGrid.work{
+        --cubeSize:82px;
+      }
+
+      .cubeGrid.work.rotated{
+        margin:30px 0;
+      }
+
+
+      .cubeTools{
+        max-width:330px;
+        gap:5px;
+      }
+
+      .cubeTool{
+        min-height:42px;
+      }
+
+      .cubeMini{
+        width:38px;
+        height:38px;
+      }
+    }
+
+    /* ===== CLAVES ===== */
+    .clavesHud{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:8px;
+    }
+    .clavesTime{
+      font-size:28px;
+      font-weight:900;
+      color:#111827;
+      letter-spacing:-0.04em;
+    }
+    .clavesStats{
+      font-size:13px;
+      font-weight:800;
+      color:#667085;
+      text-align:right;
+      line-height:1.25;
+    }
+    .clavesKey{
+	  display:grid;
+	  grid-template-columns:repeat(9, minmax(36px,1fr));
+	  gap:6px;
+	  margin:8px 0 14px;
+	}
+
+	.clavesKeyItem{
+	  display:grid;
+	  grid-template-rows:22px 38px;
+	  place-items:center;
+	  min-height:62px;
+	  border:1px solid var(--line);
+	  border-radius:6px;
+	  background:#fff;
+	  overflow:hidden;
+	}
+
+	.clavesKeyItem b{
+	  display:grid;
+	  place-items:center;
+	  width:100%;
+	  height:22px;
+	  font-size:18px;
+	  font-weight:900;
+	  color:#475467;
+	  border-bottom:1px solid var(--line);
+	}
+
+	.clavesKeyItem span{
+	  display:grid;
+	  place-items:center;
+	  width:100%;
+	  height:38px;
+	  font-size:26px;
+	  line-height:1;
+	  color:#111827;
+	  font-family:"Times New Roman", serif;
+	}
+	
+	
+    .clavesPanel{
+      text-align:center;
+      width:100%;
+    }
+    .clavesPromptLabel{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:2px;
+    }
+    .clavesNumber{
+      font-size:76px;
+      line-height:.95;
+      font-weight:950;
+      color:#111827;
+      letter-spacing:-0.06em;
+      margin:2px 0 4px;
+    }
+    .clavesStart{
+      padding:12px 18px;
+      border-radius:14px;
+      background:#2563eb;
+      color:#fff;
+      font-weight:900;
+    }
+    .symbolPad{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:7px;
+      max-width:340px;
+      margin:8px auto 0;
+    }
+    .symbolPad.locked{
+      pointer-events:none;
+      opacity:.45;
+    }
+    .symbolBtn{
+	  min-height:52px;
+	  border:1px solid var(--line);
+	  background:#fff;
+	  border-radius:14px;
+	  font-size:30px;
+	  font-weight:900;
+	  display:grid;
+	  place-items:center;
+
+	  font-family:"Times New Roman", serif;
+	}
+    .symbolBtn:active{
+      transform:scale(.98);
+    }
+    body.clavesFlashOk .question{
+      border-color:#86efac;
+      background:#f0fdf4;
+    }
+    body.clavesFlashBad .question{
+      border-color:#fca5a5;
+      background:#fef2f2;
+    }
+    .clavesResult{
+      text-align:center;
+      padding:8px 0;
+    }
+    .clavesResult h3{
+      margin:0 0 8px;
+      font-size:22px;
+    }
+    .clavesResultGrid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:10px;
+    }
+    .clavesResultBox{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background:#fff;
+    }
+    .clavesResultBox b{
+      display:block;
+      font-size:24px;
+      color:#111827;
+    }
+    .clavesResultBox span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+    }
+    @media(max-width:560px){
+	
+	  .clavesKey{
+		  grid-template-columns:repeat(9, minmax(30px,1fr));
+		  gap:3px;
+		}
+
+	  .clavesKeyItem{
+		grid-template-rows:20px 34px;
+		min-height:54px;
+		border-radius:5px;
+	  }
+
+	  .clavesKeyItem b{
+		height:20px;
+		font-size:16px;
+	  }
+
+	  .clavesKeyItem span{
+		height:34px;
+		font-size:24px;
+	  }
+	}
+
+	.answers{
+	  display:grid;
+	  grid-template-columns:repeat(2,1fr);
+	  gap:8px;
+	}
+
+	.answer{
+	  padding:13px;
+	  border-radius:12px;
+	  background:white;
+	  border:1px solid var(--line);
+	  text-align:left;
+	}
+
+	.answer.correct{
+	  background:#ecfdf3;
+	  border-color:#86efac;
+	}
+
+	.answer.wrong{
+	  background:#fef2f2;
+	  border-color:#fca5a5;
+	}
+
+	.validBox{
+	  display:none;
+
+	  margin-top:10px;
+
+	  padding:14px;
+
+	  border:1px solid #bfdbfe;
+	  background:#eff6ff;
+
+	  border-radius:12px;
+	}
+
+	.validBox.active{
+	  display:block;
+	}
+
+	.validBox h3{
+	  margin:0 0 8px;
+	  font-size:15px;
+	}
+
+	.validBox ul{
+	  margin:0;
+	  padding-left:20px;
+	  color:#344054;
+	}
+
+	.validBox li{
+	  margin:5px 0;
+	}
+
+	.selfCheck{
+	  display:none;
+	  gap:8px;
+	  margin-top:10px;
+	}
+
+	.selfCheck.active{
+	  display:flex;
+	}
+
+	.okBtn{
+	  padding:9px 13px;
+	  border-radius:10px;
+	  background:#16a34a;
+	  color:white;
+	  font-weight:750;
+	}
+
+	.badBtn{
+	  padding:9px 13px;
+	  border-radius:10px;
+	  background:#dc2626;
+	  color:white;
+	  font-weight:750;
+	}
+
+	
+	.feedback{
+	  height:32px;
+	  min-height:32px;
+	  max-height:32px;
+
+	  display:inline-flex;
+	  align-items:center;
+	  justify-content:center;
+
+	  margin:0;
+
+	  font-size:22px;
+	  font-weight:900;
+
+	  text-align:center;
+	  letter-spacing:-0.03em;
+
+	  overflow:hidden;
+	}
+
+	.feedback.ok{
+	  color:#16a34a;
+	}
+
+	.feedback.bad{
+	  color:#dc2626;
+	}
+
+	.timer{
+	  display:flex;
+	  justify-content:center;
+	  align-items:center;
+
+	  margin:10px 0 14px;
+
+	  font-size:34px;
+	  font-weight:900;
+
+	  color:#111827;
+
+	  letter-spacing:-0.04em;
+	}
+
+	.timer.warn{
+	  color:#dc2626;
+	}
+
+	.bottom{
+	  display:flex;
+	  gap:8px;
+	  justify-content:flex-end;
+
+	  margin-top:10px;
+	}
+	.feedbackWrap{
+	  display:flex;
+	  align-items:center;
+	  justify-content:center;
+	  gap:10px;
+	  min-height:34px;
+	}
+
+	.primary{
+	  padding:9px 13px;
+	  border-radius:10px;
+	  background:var(--accent);
+	  color:white;
+	  font-weight:750;
+	}
+
+	.hidden{
+	  display:none!important;
+	}
+
+	body.practiceMode .title,
+	body.practiceMode .mode,
+	body.practiceMode #list,
+	body.practiceMode .note{
+	  display:none;
+	}
+
+	body.practiceMode .app{
+	  padding-top:14px;
+	}
+
+	body.practiceMode .practice{
+	  margin-top:0;
+	}
+
+	.note{
+	  margin-top:18px;
+	  color:var(--muted);
+	  font-size:12px;
+	  line-height:1.4;
+	}
+
+	.question{
+	  min-height:280px;
+	}
+
+	@media(max-width:560px){
+
+	  .app{
+		padding-top:16px;
+	  }
+
+	  .title{
+		font-size:25px;
+	  }
+
+	  .mode{
+		position:sticky;
+		top:0;
+		background:var(--bg);
+		padding:8px 0;
+		z-index:2;
+	  }
+
+	  .mode button{
+		flex:1;
+	  }
+
+	  .pill{
+		width:100%;
+		justify-content:flex-start;
+		border-radius:14px;
+	  }
+
+	  .answers{
+		grid-template-columns:1fr;
+	  }
+	}
+  </style>
+
+</head>
+<body>
+  <main class="app">
+    <h1 class="title">HISC</h1>
+
+    <nav class="mode">
+      <button id="btnCit" class="active">Esenciales CIT</button>
+      <button id="btnAll">Todas</button>
+    </nav>
+
+    <section id="list"></section>
+
+    <section id="practice" class="practice">
+      <div class="practiceTop">
+        <h2 id="practiceTitle">Prueba</h2>
+        <button class="smallBtn" id="btnClose">Cerrar</button>
+      </div>
+
+      <div id="digitMenu" class="digitMenu hidden"></div>
+      <div id="counter" class="counter">Pregunta 1/2</div>
+
+      <div id="timer" class="timer">20</div>
+
+      <div class="question">
+        <div>
+          <strong id="qText">Pregunta</strong>
+          <span id="qSub">Elige la respuesta correcta.</span>
+        </div>
+      </div>
+
+      <div id="answers" class="answers"></div>
+
+      <div id="validBox" class="validBox">
+        <h3>Respuestas válidas posibles</h3>
+        <ul id="validList"></ul>
+      </div>
+
+      <div id="selfCheck" class="selfCheck">
+        <button id="btnGood" class="okBtn">Lo dije bien</button>
+        <button id="btnBad" class="badBtn">No lo dije bien</button>
+      </div>
+
+      <div class="feedbackWrap">
+		  <div id="feedback" class="feedback"></div>
+
+		  <div class="bottom">
+			<button id="btnNext" class="primary hidden">Siguiente</button>
+		  </div>
+		</div>
+    </section>
+
+    <p class="note"></p>
+  </main>
+
+  <script>
+    const TESTS = [
+      { id:"cubos", n:1, name:"Construcción con Cubos", abbr:"CC", category:"Primaria (CIT)", cit:true },
+      { id:"analogias", n:2, name:"Analogías", abbr:"AN", category:"Primaria (CIT)", cit:true },
+      { id:"matrices", n:3, name:"Matrices de Razonamiento", abbr:"MR", category:"Primaria (CIT)", cit:true },
+      { id:"digitos", n:4, name:"Retención de Dígitos", abbr:"RD", category:"Primaria (CIT)", cit:true },
+      { id:"claves", n:5, name:"Claves", abbr:"CLA", category:"Primaria (CIT)", cit:true },
+      { id:"vocabulario", n:6, name:"Vocabulario", abbr:"VOC", category:"Primaria (CIT)", cit:true },
+      { id:"balanzas", n:7, name:"Balanzas", abbr:"BAL", category:"Primaria (CIT)", cit:true },
+
+      { id:"rompecabezas", n:8, name:"Rompecabezas Visuales", abbr:"RV", category:"Primaria", cit:false },
+      { id:"imagenes", n:9, name:"Retención de Imágenes", abbr:"RI", category:"Primaria", cit:false },
+      { id:"busquedaSimbolos", n:10, name:"Búsqueda de Símbolos", abbr:"BS", category:"Primaria", cit:false },
+
+      { id:"informacion", n:11, name:"Información", abbr:"INF", category:"Complementaria", cit:false },
+      { id:"secuenciacion", n:12, name:"Secuenciación Letras — Números", abbr:"SLN", category:"Complementaria", cit:false },
+      { id:"cancelacion", n:13, name:"Cancelación", abbr:"CAN", category:"Complementaria", cit:false },
+      { id:"comprension", n:14, name:"Comprensión", abbr:"COM", category:"Complementaria", cit:false },
+      { id:"aritmetica", n:15, name:"Aritmética", abbr:"ARI", category:"Complementaria", cit:false }
+    ];
+
+    const CATEGORIES = ["Primaria (CIT)", "Primaria", "Complementaria"];
+
+    const QUESTIONS = {
+      cubos:{
+        task:true,
+        timeLimit:45,
+        faces:["W","R","TR","BL","TL","BR"],
+		patterns:[
+
+		  {
+			name:"Diseño 1",
+			img:"img/cub/cub_01.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "W","W",
+			  "R","W"
+			]
+		  },
+
+		  {
+			name:"Diseño 2",
+			img:"img/cub/cub_02.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "W","R",
+			  "W","R"
+			]
+		  },
+
+		  {
+			name:"Diseño 3",
+			img:"img/cub/cub_03.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "R","BL",
+			  "R","R"
+			]
+		  },
+
+		  {
+			name:"Diseño 4",
+			img:"img/cub/cub_04.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "W","TR",
+			  "W","BR"
+			]
+		  },
+
+		  {
+			name:"Diseño 5",
+			img:"img/cub/cub_05.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "R","R",
+			  "TL","TR"
+			]
+		  },
+
+		  {
+			name:"Diseño 6",
+			img:"img/cub/cub_06.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "BR","BL",
+			  "BL","BR"
+			]
+		  },
+
+		  {
+			name:"Diseño 7",
+			img:"img/cub/cub_07.png",
+			size:2,
+			rotated:false,
+			target:[
+			  "R","BL",
+			  "TR","W"
+			]
+		  },
+
+		  {
+			name:"Diseño 8",
+			img:"img/cub/cub_08.png",
+			size:2,
+			rotated:true,
+			target:[
+			  "W","BL",
+			  "TR","TL"
+			]
+		  },
+
+		  {
+			name:"Diseño 9",
+			img:"img/cub/cub_09.png",
+			size:3,
+			rotated:false,
+			target:[
+			  "BR","BL","BL",
+			  "BR","R","TL",
+			  "TR","TR","TL"
+			]
+		  },
+		  {
+			  name:"Diseño 10",
+			  img:"img/cub/cub_10.png",
+			  size:3,
+			  rotated:true,
+			  target:[
+				"R","W","W",
+				"W","R","BL",
+				"W","TR","TL"
+			  ]
+			}		  
+		]
+      },
+      analogias:[
+        {q:"¿En qué se parece una manzana y un plátano?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Frutas","Frutos"], h:"Busca la categoría común.", e:"Respuesta esperada: frutas."},
+        {q:"¿En qué se parece una muñeca y una pelota?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Juguetes","Sirven para jugar","Para jugar"], h:"Piensa para qué se usan.", e:"Respuesta esperada: juguetes o cosas para jugar."},
+        {q:"¿En qué se parece una camisa y un zapato?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Prenda","Prenda de vestir","Vestimenta","Ropa","Vestuario"], h:"Las dos se usan para vestirse.", e:"Respuesta esperada: ropa o prendas de vestir."},
+        {q:"¿En qué se parece el agua y la leche?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Líquidos","Bebidas","Bebestibles","Se beben","Para tomar","Se toman","Quitan la sed","Calman la sed"], h:"Piensa en su estado físico.", e:"Respuesta esperada: líquidos o bebidas."},
+        {q:"¿En qué se parece una mariposa y una abeja?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Insectos","Insectos que vuelan","Insectos que polinizan","Bichos"], h:"Las dos pueden volar.", e:"Respuesta esperada: insectos."},
+        {q:"¿En qué se parece un abuelo y un primo?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Parientes","Familiares","De la familia","Familia"], h:"Piensa en la familia.", e:"Respuesta esperada: familiares o parientes."},
+        {q:"¿En qué se parece un auto y un avión?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Medios de transporte","Transporte","Para transportar","Para trasladarse","Para viajar","Vehículos","Nos transportan"], h:"Sirven para desplazarse.", e:"Respuesta esperada: medios de transporte."},
+        {q:"¿En qué se parece el invierno y el verano?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Estaciones","Estaciones del año","Épocas","Épocas del año","Temporadas","Temporadas del año","Periodo del año con diferente clima"], h:"Forman parte del año.", e:"Respuesta esperada: estaciones del año."},
+        {q:"¿En qué se parece la natación y el atletismo?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Son deportes","Son deportes individuales","Son deportes grupales","Son actividades físicas estructuradas","Son competencias físicas"], h:"Se practican en competición.", e:"Respuesta esperada: deportes o actividades físicas."},
+        {q:"¿En qué se parece el enojo y la alegría?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Son emociones","Sentimientos","Cosas que uno siente","Formas de sentirse","Estados de ánimo","Humor","Reacciones emocionales","Expresiones emocionales","Respuestas emocionales"], h:"Piensa en sentimientos.", e:"Respuesta esperada: emociones o sentimientos."},
+
+                {q:"¿En qué se parece lo ácido y lo salado?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Sabores","Cosas que uno saborea","Uno los saborea","Tienen buen sabor","Son cosas que tu lengua puede sentir","Son cosas que tus papilas gustativas pueden detectar","Gustos"], h:"Tiene que ver con el gusto.", e:"Respuesta esperada: sabores o gustos."},
+        {q:"¿En qué se parece el codo y la rodilla?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Articulaciones","Partes del cuerpo que se doblan","Donde se unen los huesos","Uniones","Partes del cuerpo que tienen uniones"], h:"Las dos unen partes del cuerpo.", e:"Respuesta esperada: articulaciones."},
+        {q:"¿En qué se parece un ternero y un potrillo?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Los dos son bebés","Los dos son crías","Son etapas iniciales del desarrollo","Son animales jóvenes"], h:"Piensa en animales jóvenes.", e:"Respuesta esperada: crías o animales jóvenes."},
+        {q:"¿En qué se parece un reloj y un termómetro?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Instrumentos para medir","Herramientas para medir","Dispositivos para medir","Para medir","Mediciones","Uno los usa para medir cosas"], h:"Los dos sirven para medir algo.", e:"Respuesta esperada: instrumentos de medida."},
+        {q:"¿En qué se parece una escultura y un poema?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Obras de arte","Son arte","Son expresiones artísticas","Son cosas artísticas","Son obras creativas","Son obras de arte que expresan sentimientos","Muestras de arte","Creaciones de arte hechas por una persona"], h:"Piensa en expresión artística.", e:"Respuesta esperada: obras de arte."},
+        {q:"¿En qué se parece el hielo y el vapor?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Estados del agua","Fases del agua","Formas del agua","Agua en diferentes estados","Tienen la misma estructura química en diferentes temperaturas","Son agua en temperaturas extremas","Son cambios físicos del agua","Son parte del ciclo del agua"], h:"Los dos proceden del agua.", e:"Respuesta esperada: estados o fases del agua."},
+        {q:"¿En qué se parece la esperanza y el deseo?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Cosas que uno quiere que pasen en el futuro","Cosas que uno quiere que pasen","Son sensaciones de anticipación","Son emociones de anticipación","Son sentimientos de anticipación","Son anhelos"], h:"Tiene que ver con lo que uno quiere.", e:"Respuesta esperada: deseos, anhelos o aspiraciones."},
+        {q:"¿En qué se parece una montaña y un lago?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Son características geográficas","Son características geológicas","Son características topográficas","Geografía","Geología","Se forman por la naturaleza","Son límites naturales","Son barreras para cruzar","Son lugares geográficos","Son fenómenos geográficos","Son parte del terreno","Son parte de la superficie de la Tierra","Características físicas de la Tierra","Ecosistemas"], h:"Ambos pertenecen a la naturaleza.", e:"Respuesta esperada: elementos geográficos o naturales."},
+        {q:"¿En qué se parece lo primero y lo último?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Se ubican en los extremos","Son ubicaciones extremas","Son puntos extremos","Posiciones extremas en una serie","Están en los extremos de una fila"], h:"Piensa en secuencias.", e:"Respuesta esperada: posiciones extremas."},
+        {q:"¿En qué se parece la luz y el sonido?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Energía","Tipos de energía","Formas de energía","Se perciben a través de los sentidos","Pueden ser absorbidos","Viajan en ondas","Tienen ondas","Pueden reflejar","Vibran","Frecuencias"], h:"Piensa en fenómenos físicos.", e:"Respuesta esperada: formas de energía."},
+        {q:"¿En qué se parece la estatura y el peso?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Son maneras de medir algo","Diferentes tipos de medida","Sistemas de medición","Tipos de medición"], h:"Ambos sirven para medir físicamente a una persona.", e:"Respuesta esperada: medidas o formas de medición."},
+        {q:"¿En qué se parece la libertad y la justicia?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Son principios","Son valores","Ideales de las personas","Normas de las personas","Ideas abstractas","Conceptos","Derechos morales","Derechos humanos","Derechos civiles","Derechos"], h:"Piensa en ideas importantes para la sociedad.", e:"Respuesta esperada: valores, principios o derechos."},
+        {q:"¿En qué se parece el tiempo y el espacio?", sub:"Di la respuesta en alto. Luego pulsa Mostrar.", oral:true, valid:["Dimensiones","Cosas que nos limitan","Nos ayudan a definir el universo"], h:"Ambos se usan para describir el universo.", e:"Respuesta esperada: dimensiones o conceptos del universo."}
+
+      ],
+      matrices:[
+        {qImg:"img/mr/mr_01.png", respuesta:3, c:2, item:"PA"},
+        {qImg:"img/mr/mr_02.png", respuesta:1, c:0, item:"PB"},
+        {qImg:"img/mr/mr_03.png", respuesta:3, c:2, item:"1"},
+        {qImg:"img/mr/mr_04.png", respuesta:4, c:3, item:"2"},
+        {qImg:"img/mr/mr_05.png", respuesta:4, c:3, item:"3"},
+        {qImg:"img/mr/mr_06.png", respuesta:3, c:2, item:"4"},
+        {qImg:"img/mr/mr_07.png", respuesta:5, c:4, item:"5"},
+        {qImg:"img/mr/mr_08.png", respuesta:2, c:1, item:"6"},
+        {qImg:"img/mr/mr_09.png", respuesta:2, c:1, item:"7"},
+        {qImg:"img/mr/mr_10.png", respuesta:1, c:0, item:"8"},
+        {qImg:"img/mr/mr_11.png", respuesta:5, c:4, item:"9"},
+        {qImg:"img/mr/mr_12.png", respuesta:5, c:4, item:"10"},
+        {qImg:"img/mr/mr_13.png", respuesta:1, c:0, item:"11"},
+        {qImg:"img/mr/mr_14.png", respuesta:2, c:1, item:"12"},
+        {qImg:"img/mr/mr_15.png", respuesta:4, c:3, item:"13"},
+        {qImg:"img/mr/mr_16.png", respuesta:1, c:0, item:"14"},
+        {qImg:"img/mr/mr_17.png", respuesta:5, c:4, item:"15"},
+        {qImg:"img/mr/mr_18.png", respuesta:2, c:1, item:"16"},
+        {qImg:"img/mr/mr_19.png", respuesta:3, c:2, item:"17"},
+        {qImg:"img/mr/mr_20.png", respuesta:2, c:1, item:"18"},
+        {qImg:"img/mr/mr_21.png", respuesta:1, c:0, item:"19"},
+        {qImg:"img/mr/mr_22.png", respuesta:5, c:4, item:"20"},
+        {qImg:"img/mr/mr_23.png", respuesta:3, c:2, item:"21"},
+        {qImg:"img/mr/mr_24.png", respuesta:4, c:3, item:"22"},
+        {qImg:"img/mr/mr_25.png", respuesta:5, c:4, item:"23"},
+        {qImg:"img/mr/mr_26.png", respuesta:2, c:1, item:"24"},
+        {qImg:"img/mr/mr_27.png", respuesta:1, c:0, item:"25"},
+        {qImg:"img/mr/mr_28.png", respuesta:3, c:2, item:"26"},
+        {qImg:"img/mr/mr_29.png", respuesta:3, c:2, item:"27"},
+        {qImg:"img/mr/mr_30.png", respuesta:4, c:3, item:"28"},
+        {qImg:"img/mr/mr_31.png", respuesta:3, c:2, item:"29"},
+        {qImg:"img/mr/mr_32.png", respuesta:1, c:0, item:"30"},
+        {qImg:"img/mr/mr_33.png", respuesta:5, c:4, item:"31"},
+        {qImg:"img/mr/mr_34.png", respuesta:4, c:3, item:"32"}
+      ],
+      digitos:[
+        {
+          digitTask:true,
+          mode:"directo",
+          modeName:"Orden directo",
+          attempts:[
+            {item:"1", intento:"1", seq:[2,9], answer:[2,9]},
+            {item:"1", intento:"2", seq:[5,4], answer:[5,4]},
+            {item:"2", intento:"1", seq:[3,9,6], answer:[3,9,6]},
+            {item:"2", intento:"2", seq:[6,5,2], answer:[6,5,2]},
+            {item:"3", intento:"1", seq:[5,4,1,7], answer:[5,4,1,7]},
+            {item:"3", intento:"2", seq:[9,1,6,8], answer:[9,1,6,8]},
+            {item:"4", intento:"1", seq:[8,2,1,9,6], answer:[8,2,1,9,6]},
+            {item:"4", intento:"2", seq:[7,2,3,4,9], answer:[7,2,3,4,9]},
+            {item:"5", intento:"1", seq:[5,7,3,6,4,8], answer:[5,7,3,6,4,8]},
+            {item:"5", intento:"2", seq:[3,8,4,1,7,5], answer:[3,8,4,1,7,5]},
+            {item:"6", intento:"1", seq:[2,1,8,9,4,3,7], answer:[2,1,8,9,4,3,7]},
+            {item:"6", intento:"2", seq:[7,8,5,2,1,6,3], answer:[7,8,5,2,1,6,3]},
+            {item:"7", intento:"1", seq:[1,8,4,2,7,5,3,6], answer:[1,8,4,2,7,5,3,6]},
+            {item:"7", intento:"2", seq:[2,7,9,6,3,1,4,8], answer:[2,7,9,6,3,1,4,8]},
+            {item:"8", intento:"1", seq:[7,2,6,1,9,4,8,3,5], answer:[7,2,6,1,9,4,8,3,5]},
+            {item:"8", intento:"2", seq:[4,3,8,9,1,7,5,6,2], answer:[4,3,8,9,1,7,5,6,2]},
+            {item:"9", intento:"1", seq:[6,2,5,3,1,9,8,5,4,7], answer:[6,2,5,3,1,9,8,5,4,7]},
+            {item:"9", intento:"2", seq:[9,4,3,8,7,5,2,9,6,1], answer:[9,4,3,8,7,5,2,9,6,1]}
+          ]
+        },
+        {
+          digitTask:true,
+          mode:"inverso",
+          modeName:"Orden inverso",
+          attempts:[
+            {item:"P", intento:"1", seq:[9,4], answer:[4,9]},
+            {item:"P", intento:"2", seq:[5,6], answer:[6,5]},
+            {item:"1", intento:"1", seq:[2,1], answer:[1,2]},
+            {item:"1", intento:"2", seq:[1,3], answer:[3,1]},
+            {item:"2", intento:"1", seq:[3,9], answer:[9,3]},
+            {item:"2", intento:"2", seq:[8,5], answer:[5,8]},
+            {item:"3", intento:"1", seq:[2,3,6], answer:[6,3,2]},
+            {item:"3", intento:"2", seq:[5,4,1], answer:[1,4,5]},
+            {item:"4", intento:"1", seq:[4,5,8], answer:[8,5,4]},
+            {item:"4", intento:"2", seq:[2,7,5], answer:[5,7,2]},
+            {item:"5", intento:"1", seq:[7,4,5,2], answer:[2,5,4,7]},
+            {item:"5", intento:"2", seq:[9,3,8,6], answer:[6,8,3,9]},
+            {item:"6", intento:"1", seq:[2,1,7,9,4], answer:[4,9,7,1,2]},
+            {item:"6", intento:"2", seq:[5,6,3,8,7], answer:[7,8,3,6,5]},
+            {item:"7", intento:"1", seq:[1,6,4,7,5,8], answer:[8,5,7,4,6,1]},
+            {item:"7", intento:"2", seq:[6,3,7,2,9,1], answer:[1,9,2,7,3,6]},
+            {item:"8", intento:"1", seq:[8,1,5,2,4,3,6], answer:[6,3,4,2,5,1,8]},
+            {item:"8", intento:"2", seq:[4,3,7,9,2,8,1], answer:[1,8,2,9,7,3,4]},
+            {item:"9", intento:"1", seq:[3,1,7,9,4,6,8,2], answer:[2,8,6,4,9,7,1,3]},
+            {item:"9", intento:"2", seq:[9,8,1,6,3,2,4,7], answer:[7,4,2,3,6,1,8,9]}
+          ]
+        },
+        {
+          digitTask:true,
+          mode:"secuenciados",
+          modeName:"Secuenciados",
+          attempts:[
+            {item:"PA", intento:"1", seq:[3,1], answer:[1,3]},
+            {item:"PA", intento:"2", seq:[8,6], answer:[6,8]},
+            {item:"PB", intento:"1", seq:[5,2,4], answer:[2,4,5]},
+            {item:"PB", intento:"2", seq:[4,3,3], answer:[3,3,4]},
+            {item:"1", intento:"1", seq:[4,1], answer:[1,4]},
+            {item:"1", intento:"2", seq:[3,2], answer:[2,3]},
+            {item:"2", intento:"1", seq:[5,2,7], answer:[2,5,7]},
+            {item:"2", intento:"2", seq:[1,8,6], answer:[1,6,8]},
+            {item:"3", intento:"1", seq:[7,5,8,1], answer:[1,5,7,8]},
+            {item:"3", intento:"2", seq:[4,2,9,3], answer:[2,3,4,9]},
+            {item:"4", intento:"1", seq:[1,5,6,2,8], answer:[1,2,5,6,8]},
+            {item:"4", intento:"2", seq:[2,8,4,7,9], answer:[2,4,7,8,9]},
+            {item:"5", intento:"1", seq:[3,3,6,1,5], answer:[1,3,3,5,6]},
+            {item:"5", intento:"2", seq:[4,9,4,6,9], answer:[4,4,6,9,9]},
+            {item:"6", intento:"1", seq:[8,5,2,5,3,7], answer:[2,3,5,5,7,8]},
+            {item:"6", intento:"2", seq:[6,1,4,7,9,3], answer:[1,3,4,6,7,9]},
+            {item:"7", intento:"1", seq:[9,7,9,6,2,6,8], answer:[2,6,6,7,8,9,9]},
+            {item:"7", intento:"2", seq:[3,1,7,5,1,8,5], answer:[1,1,3,5,5,7,8]},
+            {item:"8", intento:"1", seq:[6,9,6,2,1,3,7,9], answer:[1,2,3,6,6,7,9,9]},
+            {item:"8", intento:"2", seq:[1,4,8,5,4,8,7,4], answer:[1,4,4,4,5,7,8,8]},
+            {item:"9", intento:"1", seq:[2,5,7,7,4,8,7,5,2], answer:[2,2,4,5,5,7,7,7,8]},
+            {item:"9", intento:"2", seq:[9,1,8,3,6,3,9,2,6], answer:[1,2,3,3,6,6,8,9,9]}
+          ]
+        }
+      ],
+      claves:{
+        task:true,
+        timeLimit:120,
+        key:{
+          1:"ε",
+          2:"∧",
+          3:")",
+          4:"\\",
+          5:"⌘",
+          6:"✓",
+          7:"○",
+          8:"┌",
+          9:"∪"
+        },
+        sequence:[
+          2,4,1,9,5,7,3,8,6,3,5,7,2,8,4,6,9,1,
+          3,2,6,1,9,8,4,7,5,6,3,2,7,1,8,9,5,4,
+          6,9,2,5,4,1,7,3,8,2,4,6,9,5,7,1,8,3,
+          5,3,8,7,2,6,1,9,4,5,1,8,3,7,6,2,4,9,
+          1,8,4,6,3,9,2,5,7,4,8,3,1,6,9,7,2,5,
+          9,1,5,4,7,3,8,6,2,1,9,4,6,3,5,8,7,2,
+          8,5,7,3,6,2,9,4,1,7,2,5,8,9,3,4,1,6
+        ]
+      },
+      vocabulario:[
+        {q:"Vaca ¿Qué es una vaca?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Animal","Animal que produce leche","Mamífero","Vacuno","Bovino"]},
+        {q:"Alegrar ¿Qué significa alegrar?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Hacer que otra persona esté bien","Dar ánimo","Animar a alguien que está triste","Dar felicidad a alguien","Transmitir felicidad","Hacer reír a alguien"]},
+        {q:"Engañar ¿Qué significa engañar?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Hacer creer a otra persona que una cosa es verdadera cuando no lo es","Mentir a otra persona","Mentir"]},
+        {q:"Cachorro ¿Qué es un cachorro?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Una cría","Cría de mamífero","Animal recién nacido","Perro bebé"]},
+        {q:"Eterno ¿Qué significa eterno?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Algo que dura para siempre","Algo que nunca se termina","Algo que nunca se acaba"]},
+        {q:"Extraviado ¿Qué significa extraviado?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Algo que ha perdido el rumbo","Un camino muy apartado","Perdido","Algo que está perdido","Desaparecido","Algo que está desaparecido"]},
+        {q:"Bus ¿Qué es un bus?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Vehículo que permite transportar a mucha gente","Un vehículo con muchos asientos para transportar gente","Transporte público","Vehículo de transporte","Micro","Autobús","Guagua","Furgón escolar"]},
+        {q:"Diccionario ¿Qué es un diccionario?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Un libro donde uno encuentra las definiciones de las palabras","Un sitio web donde uno encuentra las definiciones de las palabras","Una página web donde uno encuentra las definiciones de las palabras","Donde uno encuentra el significado de las palabras"]},
+        {q:"Promesa ¿Qué es una promesa?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Un contrato que se debe cumplir","Un acuerdo que debe respetarse","Algo que se debe cumplir","Se tiene que cumplir","Un compromiso","Un juramento","Tu palabra","La palabra de alguien"]},
+        {q:"Científico ¿Qué es un científico?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Una persona que trabaja en la ciencia","Una persona que usa el método científico","Una persona que hace investigaciones y experimenta","Un investigador que utiliza el método científico","Alguien que hace descubrimientos científicos"]},
+        {q:"Tolerar ¿Qué significa tolerar?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Respetar las ideas de otra persona","Aguantar a otra persona","Soportar","Resistir"]},
+        {q:"Encantador ¿Qué significa encantador?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Una persona simpática","Simpático","Una persona agradable","Una persona amable","Una persona que cae bien a otros","Una persona que hace hechizos","Un hechicero","Un brujo"]},
+        {q:"Suficiente ¿Qué significa suficiente?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Adecuado","Lo que se necesita para hacer algo","Lo necesario para hacer algo","Bastante"]},
+        {q:"Prófugo ¿Qué es un prófugo?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Una persona que se escapó de la ley","Fugitivo de la justicia","Un ladrón que se escapa"]},
+        {q:"Abreviado ¿Qué significa abreviado?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Algo acortado de una versión más grande","Acortado","Como un resumen","Resumido","Achicado","Una versión más pequeña de otra cosa"]},
+        {q:"Fugaz ¿Qué significa fugaz?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Algo breve","Algo que dura un instante","Algo que dura poco tiempo"]},
+        {q:"Rebelde ¿Qué significa rebelde?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Alguien que desafía las normas","Alguien que está en contra de las reglas","Alguien que rompe las normas","Transgresor"]},
+        {q:"Sofisticado ¿Qué significa sofisticado?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Algo complejo","Complejo","Elegante","Una persona elegante","Algo que no es simple","Refinado"]},
+        {q:"Urbano ¿Qué significa urbano?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["De la ciudad","Relacionado a la ciudad","Citadino","Cortés","Atento","De buen modo","Bien educado"]},
+        {q:"Transgredir ¿Qué significa transgredir?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Romper las reglas","Quebrar las reglas","Saltarse las reglas","Quebrantar la ley","Saltarse las normas"]},
+        {q:"Unilateral ¿Qué significa unilateral?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Que solo considera una de las partes involucradas","Que refiere a una sola de las partes"]},
+        {q:"Nocivo ¿Qué significa nocivo?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Que hace mal","Algo malo","Malo","Dañino","Perjudicial","Pernicioso"]},
+        {q:"Utopía ¿Qué es una utopía?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Una sociedad futura ideal","Una sociedad ideal","Un sistema difícil de conseguir","Un modelo de sociedad ideal"]},
+        {q:"Susceptible ¿Qué significa susceptible?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Ser sensible a algo","Ser frágil a algo","Frágil","Sensible","Una persona que se molesta fácilmente","Propiedad de ser afectado"]},
+        {q:"Propiciar ¿Qué significa propiciar?", sub:"Di la respuesta en alto y luego pulsa Mostrar.", oral:true, valid:["Dar las condiciones para que suceda algo","Generar las condiciones para que suceda algo","Favorecer las condiciones para que suceda algo","Facilitar las condiciones para que suceda algo"]}
+      ],
+      balanzas:[
+        { qImg:"img/bal/bal_01.png", respuesta:2, c:1, item:"PA" },
+        { qImg:"img/bal/bal_02.png", respuesta:3, c:2, item:"1" },
+        { qImg:"img/bal/bal_03.png", respuesta:1, c:0, item:"2" },
+        { qImg:"img/bal/bal_04.png", respuesta:4, c:3, item:"3" },
+        { qImg:"img/bal/bal_05.png", respuesta:2, c:1, item:"PB" },
+        { qImg:"img/bal/bal_06.png", respuesta:5, c:4, item:"4" },
+        { qImg:"img/bal/bal_07.png", respuesta:3, c:2, item:"5" },
+        { qImg:"img/bal/bal_08.png", respuesta:3, c:2, item:"6" },
+        { qImg:"img/bal/bal_09.png", respuesta:4, c:3, item:"7" },
+        { qImg:"img/bal/bal_10.png", respuesta:4, c:3, item:"8" },
+        { qImg:"img/bal/bal_11.png", respuesta:1, c:0, item:"9" },
+        { qImg:"img/bal/bal_12.png", respuesta:3, c:2, item:"10" },
+        { qImg:"img/bal/bal_13.png", respuesta:4, c:3, item:"11" },
+        { qImg:"img/bal/bal_14.png", respuesta:5, c:4, item:"12" },
+        { qImg:"img/bal/bal_15.png", respuesta:2, c:1, item:"13" },
+        { qImg:"img/bal/bal_16.png", respuesta:2, c:1, item:"14" },
+        { qImg:"img/bal/bal_17.png", respuesta:3, c:2, item:"15" },
+        { qImg:"img/bal/bal_18.png", respuesta:1, c:0, item:"16" },
+        { qImg:"img/bal/bal_19.png", respuesta:5, c:4, item:"17" },
+        { qImg:"img/bal/bal_20.png", respuesta:2, c:1, item:"18" },
+        { qImg:"img/bal/bal_21.png", respuesta:3, c:2, item:"19" },
+        { qImg:"img/bal/bal_22.png", respuesta:4, c:3, item:"20" },
+        { qImg:"img/bal/bal_23.png", respuesta:4, c:3, item:"21" },
+        { qImg:"img/bal/bal_24.png", respuesta:2, c:1, item:"22" },
+        { qImg:"img/bal/bal_25.png", respuesta:1, c:0, item:"23" },
+        { qImg:"img/bal/bal_26.png", respuesta:5, c:4, item:"24" },
+        { qImg:"img/bal/bal_27.png", respuesta:2, c:1, item:"25" },
+        { qImg:"img/bal/bal_28.png", respuesta:1, c:0, item:"26" },
+        { qImg:"img/bal/bal_29.png", respuesta:5, c:4, item:"27" },
+        { qImg:"img/bal/bal_30.png", respuesta:3, c:2, item:"28" },
+        { qImg:"img/bal/bal_31.png", respuesta:5, c:4, item:"29" },
+        { qImg:"img/bal/bal_32.png", respuesta:1, c:0, item:"30" },
+        { qImg:"img/bal/bal_33.png", respuesta:4, c:3, item:"31" },
+        { qImg:"img/bal/bal_34.png", respuesta:1, c:0, item:"32" },
+        { qImg:"img/bal/bal_35.png", respuesta:4, c:3, item:"33" },
+        { qImg:"img/bal/bal_36.png", respuesta:5, c:4, item:"34" }
+      ],
+      rompecabezas:[
+        {q:"Forma objetivo: ■", sub:"¿Qué dos piezas la forman mejor?", a:["▌ + ▐","▲ + ○","— + │","● + ●"], c:0, h:"Dos mitades verticales forman el cuadrado.", e:"▌ + ▐ forman una figura cuadrada."},
+        {q:"Forma objetivo: ▲", sub:"Elige la pieza compatible.", a:["Triángulo","Círculo","Cuadrado","Línea"], c:0, h:"Busca la misma familia de forma.", e:"Un triángulo es compatible con ▲."}
+      ],
+      imagenes:[
+        {q:"🐶 · 🚗 · ⭐", sub:"Elige el mismo orden.", a:["🐶 · 🚗 · ⭐","🚗 · 🐶 · ⭐","⭐ · 🚗 · 🐶","🐶 · ⭐ · 🚗"], c:0, h:"Recuerda la primera imagen.", e:"El orden correcto es perro, coche, estrella."},
+        {q:"🍎 · 🏠 · ⚽ · 🌙", sub:"Elige el mismo orden.", a:["🍎 · 🏠 · ⚽ · 🌙","🏠 · 🍎 · ⚽ · 🌙","🍎 · ⚽ · 🏠 · 🌙","🌙 · ⚽ · 🏠 · 🍎"], c:0, h:"Empieza por la manzana.", e:"El orden correcto es 🍎 · 🏠 · ⚽ · 🌙."}
+      ],
+      busquedaSimbolos:[
+        {q:"Objetivo: ★", sub:"¿Dónde aparece?", a:["○ △ ★ □","○ △ □ ◇","□ ○ △ ◇","◇ ○ □ △"], c:0, h:"Busca la estrella.", e:"La estrella aparece en la primera opción."},
+        {q:"Objetivo: ◆", sub:"¿Dónde aparece?", a:["○ △ □ ◇","● ▲ ◆ □","□ ○ △ ◇","◇ ○ □ △"], c:1, h:"Busca el rombo negro.", e:"◆ aparece en la segunda opción."}
+      ],
+      informacion:[
+        {q:"¿Cuántos días tiene una semana?", sub:"Elige la respuesta correcta.", a:["5","6","7","8"], c:2, h:"Piensa en lunes a domingo.", e:"Una semana tiene 7 días."},
+        {q:"¿Qué usamos para medir la temperatura?", sub:"Elige la respuesta correcta.", a:["Termómetro","Regla","Báscula","Reloj"], c:0, h:"Sirve para saber si algo está frío o caliente.", e:"La temperatura se mide con un termómetro."}
+      ],
+      secuenciacion:[
+        {q:"B · 2 · A · 1", sub:"Ordena letras y números.", a:["A · B · 1 · 2","1 · 2 · A · B","A · 1 · B · 2","B · A · 2 · 1"], c:1, h:"Primero números en orden y luego letras.", e:"El orden es 1 · 2 · A · B."},
+        {q:"C · 3 · A · 1", sub:"Ordena letras y números.", a:["1 · 3 · A · C","A · C · 1 · 3","3 · 1 · C · A","1 · A · 3 · C"], c:0, h:"Números de menor a mayor; letras alfabéticas.", e:"El orden es 1 · 3 · A · C."}
+      ],
+      cancelacion:[
+        {q:"Marca los ○", sub:"¿Qué grupo tiene más objetivos?", a:["○ ○ △ □","△ □ ○ ◇","□ △ ◇ ○","◇ △ □ □"], c:0, h:"Cuenta los círculos.", e:"La primera opción tiene dos ○."},
+        {q:"Marca los ▲", sub:"¿Qué grupo tiene más objetivos?", a:["▲ ○ △ □","▲ ▲ ○ ◇","□ △ ◇ ○","◇ △ □ □"], c:1, h:"Cuenta los triángulos negros.", e:"La segunda opción tiene dos ▲."}
+      ],
+      comprension:[
+        {q:"¿Por qué miramos antes de cruzar?", sub:"Elige la mejor respuesta.", a:["Para evitar accidentes","Para contar coches","Para caminar más lento","Para saludar"], c:0, h:"Tiene que ver con la seguridad.", e:"Miramos antes de cruzar para evitar accidentes."},
+        {q:"¿Por qué se pide perdón?", sub:"Elige la mejor respuesta.", a:["Para reparar una falta","Para ganar una carrera","Para apagar la luz","Para cambiar de ropa"], c:0, h:"Piensa en una situación social.", e:"Se pide perdón para reconocer y reparar una falta."}
+      ],
+      aritmetica:[
+        {q:"8 + 7", sub:"Calcula mentalmente.", a:["13","14","15","16"], c:2, h:"8 + 2 = 10, faltan 5.", e:"8 + 7 = 15."},
+        {q:"Si tienes 12 caramelos y das 5", sub:"¿Cuántos quedan?", a:["5","6","7","8"], c:2, h:"Es una resta.", e:"12 - 5 = 7."}
+      ]
+    };
+
+    let mode = "cit";
+    let currentTest = null;
+    let questions = [];
+    let qIndex = 0;
+    let answered = false;
+    let digitModeIndex = 0;
+    let digitInput = "";
+    let playingDigits = false;
+    let timerInt = null;
+    let secondsLeft = 20;
+
+    let cubosRunning = false;
+    let cubosIndex = 0;
+    let cubosCurrent = ["E","E","E","E"];
+    let cubosSelectedFace = "W";
+    let cubosTimerInt = null;
+    let cubosSecondsLeft = 45;
+
+    let clavesRunning = false;
+	let clavesPadOrder = [];
+    let clavesIndex = 0;
+    let clavesCorrect = 0;
+    let clavesWrong = 0;
+    let clavesTimerInt = null;
+    let clavesSecondsLeft = 120;
+
+    // Mezcla respuestas manteniendo la correcta asociada.
+    // Si la pregunta es oral, no tiene opciones "a", así que se deja intacta.
+    function shuffleQuestion(q){
+      if(!q || !Array.isArray(q.a)) return q;
+
+      const arr = q.a.map((txt,i)=>({txt,correct:i===q.c}));
+      for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+      }
+      return {
+        ...q,
+        a: arr.map(x=>x.txt),
+        c: arr.findIndex(x=>x.correct)
+      };
+    }
+
+
+    const $ = id => document.getElementById(id);
+
+    function render(){
+      $("btnCit").classList.toggle("active", mode === "cit");
+      $("btnAll").classList.toggle("active", mode === "all");
+
+      const items = TESTS.filter(t => mode === "all" || t.cit);
+
+      $("list").innerHTML = CATEGORIES.map(category => {
+        const tests = items.filter(t => t.category === category);
+        if(!tests.length) return "";
+        return `
+          <h2 class="sectionTitle">${category}</h2>
+          <div class="pills">
+            ${tests.map(t => `
+              <button class="pill" data-id="${t.id}">
+                <span class="num">${t.n}</span>
+                <span class="abbr">${t.abbr}</span>
+                <span class="name">${t.name}</span>
+                ${t.cit ? `<span class="tag">CIT</span>` : ``}
+              </button>
+            `).join("")}
+          </div>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".pill").forEach(p => {
+        p.onclick = () => openPractice(p.dataset.id);
+      });
+    }
+
+    function openPractice(id){
+      currentTest = TESTS.find(t => t.id === id);
+
+      if(id === "cubos"){
+        setupCubos();
+      } else if(id === "digitos"){
+        digitModeIndex = 0;
+        setDigitMode(0);
+      } else if(id === "claves"){
+        setupClaves();
+      } else {
+        questions = QUESTIONS[id] || [];
+        qIndex = 0;
+        $("practiceTitle").textContent = `${currentTest.abbr} · ${currentTest.name}`;
+        $("digitMenu").classList.add("hidden");
+      }
+
+      document.body.classList.add("practiceMode");
+      $("practice").classList.add("active");
+      showQuestion();
+      $("practice").scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+
+
+
+
+    function isCubosTest(){
+      return currentTest && currentTest.id === "cubos";
+    }
+
+    function setupCubos(){
+      const data = QUESTIONS.cubos;
+
+      questions = [data];
+      qIndex = 0;
+
+      cubosRunning = false;
+      cubosIndex = 0;
+      cubosCurrent = ["E","E","E","E"];
+      cubosSelectedFace = "W";
+      cubosSecondsLeft =
+      cubosSecondsLeft = data.timeLimit || 45;
+
+      $("practiceTitle").textContent = `${currentTest.abbr} · ${currentTest.name}`;
+      $("digitMenu").classList.add("hidden");
+    }
+
+    function cubeCellHtml(face, idx=null, editable=false){
+      const dataIndex = idx === null ? "" : `data-i="${idx}"`;
+      const editableClass = editable ? " editable" : "";
+      return `<button class="cubeCell ${face}${editableClass}" ${dataIndex} aria-label="cubo ${face}"></button>`;
+    }
+
+    function renderCubeGrid(arr, extraClass, editable=false, size=2){
+	  return `
+		<div class="cubeGrid ${extraClass}" style="--gridSize:${size}">
+		  ${arr.map((face,idx)=>cubeCellHtml(face, idx, editable)).join("")}
+		</div>
+	  `;
+	}
+
+    function renderCubeTools(){
+      const faces = QUESTIONS.cubos.faces;
+      return `
+        <div class="cubeTools">
+          ${faces.map(face=>`
+            <button class="cubeTool ${face === cubosSelectedFace ? "active" : ""}" data-face="${face}">
+              <span class="cubeMini cubeCell ${face} ${QUESTIONS.cubos.patterns[cubosIndex]?.rotated ? "rotatedMini" : ""}"></span>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderCubos(){
+      const data = QUESTIONS.cubos;
+      const pattern = data.patterns[cubosIndex];
+
+      $("counter").innerHTML = `
+        <div class="cubeHud">
+          <div class="cubeTime" id="cubeTime">${cubosSecondsLeft}s</div>
+          <div class="cubeStats">
+            <div>${pattern.name}</div>
+            <div>${cubosIndex + 1}/${data.patterns.length}</div>
+          </div>
+        </div>
+      `;
+
+      $("qText").innerHTML = `
+        <div class="cubePanel">
+          <div class="cubeBoards">
+            <div class="cubeBox">
+              <div class="cubeLabel">Modelo</div>
+              <img src="${pattern.img}" class="cubeReference" alt="${pattern.name}">
+            </div>
+            <div class="cubeBox">
+              <div class="cubeLabel">Tu diseño</div>
+              ${renderCubeGrid(
+			  cubosCurrent,
+			  pattern.rotated ? "work rotated" : "work",
+			  true,
+			  pattern.size || 2
+			)}
+            </div>
+          </div>
+
+          ${renderCubeTools()}
+
+          <div class="cubeActions">
+            <button class="cubeCheck" id="btnCheckCubos">Validar</button>
+            <button class="cubeClear" id="btnClearCubos">Limpiar</button>
+            <button class="cubeClear" id="btnSkipCubos">Siguiente cubo</button>
+          </div>
+        </div>
+      `;
+
+      $("qSub").innerHTML = "&nbsp;";
+      $("validBox").classList.remove("active");
+      $("selfCheck").classList.remove("active");
+      $("validList").innerHTML = "";
+      $("btnNext").classList.add("hidden");
+
+      const timerEl = $("timer");
+      if(timerEl) timerEl.style.display = "none";
+
+      document.querySelectorAll(".cubeTool").forEach(btn=>{
+        btn.onclick = ()=>{
+          cubosSelectedFace = btn.dataset.face;
+          renderCubos();
+        };
+      });
+
+      document.querySelectorAll(".cubeGrid.work .cubeCell").forEach(cell=>{
+        cell.onclick = ()=>{
+          if(!cubosRunning) return;
+          const i = Number(cell.dataset.i);
+          cubosCurrent[i] = cubosSelectedFace;
+          renderCubos();
+        };
+      });
+
+      $("btnCheckCubos").onclick = checkCubos;
+
+      $("btnClearCubos").onclick = ()=>{
+        if(!cubosRunning) return;
+        const pattern = QUESTIONS.cubos.patterns[cubosIndex];
+        const size = pattern.size || 2;
+        cubosCurrent = Array(size * size).fill("E");
+        renderCubos();
+      };
+
+      $("btnSkipCubos").onclick = ()=>{
+        clearInterval(cubosTimerInt);
+
+        if(cubosIndex < QUESTIONS.cubos.patterns.length - 1){
+          cubosIndex++;
+        } else {
+          cubosIndex = 0;
+        }
+
+        cubosRunning = false;
+
+        const pattern = QUESTIONS.cubos.patterns[cubosIndex];
+        const size = pattern.size || 2;
+
+        cubosCurrent = Array(size * size).fill("E");
+        cubosSelectedFace = "W";
+        cubosSecondsLeft = size >= 3 ? 75 : 45;
+
+        $("feedback").textContent = "";
+        $("feedback").className = "feedback";
+
+        showQuestion();
+      };
+    }
+
+    function startCubosAuto(){
+      const data = QUESTIONS.cubos;
+      const pattern = data.patterns[cubosIndex];
+      const size = pattern.size || 2;
+
+      cubosRunning = true;
+      cubosCurrent = Array(size * size).fill("E");
+      cubosSelectedFace = "W";
+      cubosSecondsLeft = data.timeLimit || 45;
+
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+
+      clearInterval(cubosTimerInt);
+      renderCubos();
+
+      cubosTimerInt = setInterval(()=>{
+        cubosSecondsLeft--;
+
+        const t = $("cubeTime");
+        if(t) t.textContent = cubosSecondsLeft + "s";
+
+        if(cubosSecondsLeft <= 0){
+          clearInterval(cubosTimerInt);
+          cubosRunning = false;
+
+          $("feedback").textContent = "Tiempo agotado";
+          $("feedback").className = "feedback bad";
+
+          $("btnNext").classList.remove("hidden");
+          $("btnNext").textContent =
+            cubosIndex < QUESTIONS.cubos.patterns.length - 1
+              ? "Siguiente"
+              : "Terminar";
+        }
+      },1000);
+    }
+
+    function checkCubos(){
+      if(!cubosRunning) return;
+
+      const target = QUESTIONS.cubos.patterns[cubosIndex].target;
+      const ok = cubosCurrent.length === target.length && cubosCurrent.every((face,i)=>face === target[i]);
+		
+      if(ok){
+        clearInterval(cubosTimerInt);
+        cubosRunning = false;
+        document.body.classList.add("cubeFlashOk");
+        setTimeout(()=>document.body.classList.remove("cubeFlashOk"), 160);
+
+        $("feedback").textContent = "¡Correcto!";
+        $("feedback").className = "feedback ok";
+        $("btnNext").classList.remove("hidden");
+        $("btnNext").textContent = cubosIndex < QUESTIONS.cubos.patterns.length - 1 ? "Siguiente" : "Terminar";
+      } else {
+        document.body.classList.add("cubeFlashBad");
+        setTimeout(()=>document.body.classList.remove("cubeFlashBad"), 160);
+        $("feedback").textContent = "No coincide";
+        $("feedback").className = "feedback bad";
+      }
+    }
+
+
+    function isDigitQuestion(q){
+      return q && Array.isArray(q.seq) && Array.isArray(q.answer);
+    }
+
+    function setDigitMode(i){
+      digitModeIndex = i;
+      const modes = QUESTIONS.digitos || [];
+      const mode = modes[digitModeIndex] || {modeName:'Retención de Dígitos', attempts:[]};
+
+      questions = mode.attempts || [];
+      qIndex = 0;
+      digitInput = "";
+
+      $("practiceTitle").textContent = `${currentTest.abbr} · ${currentTest.name}`;
+      $("digitMenu").classList.remove("hidden");
+      $("digitMenu").innerHTML = modes.map((m,idx)=>`
+        <button class="${idx === digitModeIndex ? "active" : ""}" data-i="${idx}">
+          ${m.modeName}
+        </button>
+      `).join("");
+
+      document.querySelectorAll("#digitMenu button").forEach(btn=>{
+        btn.onclick = ()=>{
+          setDigitMode(Number(btn.dataset.i));
+          showQuestion();
+        };
+      });
+    }
+
+    function speakDigit(n){
+      return new Promise(resolve=>{
+        if(!("speechSynthesis" in window)){
+          resolve();
+          return;
+        }
+
+        const u = new SpeechSynthesisUtterance(String(n));
+        u.lang = "es-ES";
+        u.rate = 1.18;
+        u.pitch = 1;
+        u.onend = resolve;
+        u.onerror = resolve;
+        speechSynthesis.speak(u);
+      });
+    }
+
+    function wait(ms){
+      return new Promise(resolve=>setTimeout(resolve, ms));
+    }
+
+    async function playCurrentDigits(){
+	  if(playingDigits) return;
+	  const q = questions[qIndex];
+	  if(!isDigitQuestion(q)) return;
+
+	  playingDigits = true;
+	  speechSynthesis.cancel();
+
+	  $("digitStatus").textContent = "Escucha...";
+	  $("btnPlayDigits").disabled = true;
+	  $("answers").classList.add("locked");
+
+	  const gap = 450;
+
+	q.seq.forEach((n, i) => {
+
+	  const u = new SpeechSynthesisUtterance(String(n));
+
+	  u.lang = "es-ES";
+	  u.rate = 1.15;
+	  u.pitch = 1;
+
+	  // último dígito
+	  if(i === q.seq.length - 1){
+
+		u.onend = () => {
+		  $("digitStatus").textContent = "Ahora responde";
+		  $("btnPlayDigits").disabled = false;
+		  $("answers").classList.remove("locked");
+		  playingDigits = false;
+		};
+	  }
+
+	  setTimeout(() => {
+		speechSynthesis.speak(u);
+	  }, i * gap);
+
+	});
+	}
+
+    function formatDigits(value){
+      return value ? value.split("").join("-") : "—";
+    }
+
+    function renderDigitKeypad(){
+      $("answers").className = "keypad";
+      $("answers").innerHTML = `
+        ${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="keyBtn" data-k="${n}">${n}</button>`).join("")}
+        <button class="keyBtn del" data-k="del">⌫</button>
+        <button class="keyBtn" data-k="0">0</button>
+        <button class="keyBtn ok" data-k="ok">OK</button>
+      `;
+
+      document.querySelectorAll(".keyBtn").forEach(btn=>{
+        btn.onclick = ()=>{
+          const k = btn.dataset.k;
+
+          if($("answers").classList.contains("locked")) return;
+
+          if(k === "del"){
+            digitInput = digitInput.slice(0,-1);
+          } else if(k === "ok"){
+            checkDigitAnswer();
+            return;
+          } else if(digitInput.length < 12){
+            digitInput += k;
+          }
+
+          $("digitInput").textContent = formatDigits(digitInput);
+        };
+      });
+    }
+
+    function checkDigitAnswer(){
+      if(answered) return;
+
+      answered = true;
+      const q = questions[qIndex];
+      const user = digitInput.split("").map(Number);
+      const ok = user.length === q.answer.length && user.every((n,i)=>n === q.answer[i]);
+
+      $("digitAnswer").textContent = "Respuesta correcta: " + q.answer.join("-");
+
+      $("qSub").innerHTML = "&nbsp;";
+      $("digitStatus").textContent = " ";
+
+      if(ok){
+        $("feedback").textContent = "¡Correcto!";
+        $("feedback").className = "feedback ok";
+      } else {
+        $("feedback").textContent = "No es correcto";
+        $("feedback").className = "feedback bad";
+      }
+
+      $("btnNext").classList.remove("hidden");
+      $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+    }
+
+
+    function tryMatrixFallback(img){
+      if(img.dataset.triedFallback === "1") return;
+      img.dataset.triedFallback = "1";
+
+      const src = img.getAttribute("src");
+
+      // Permite dos estilos de nombre:
+      // mr_10.png, mr_11.png...
+      // mr_010.png, mr_011.png...
+      const m = src.match(/mr_(\d+)\.png$/);
+      if(!m) return;
+
+      const n = parseInt(m[1], 10);
+      if(Number.isNaN(n)) return;
+
+      const currentName = m[0];
+      const altName = n >= 10
+        ? `mr_0${n}.png`
+        : `mr_${String(n).padStart(2,"0")}.png`;
+
+      if(currentName !== altName){
+        img.src = src.replace(currentName, altName);
+      }
+    }
+
+
+
+    function isClavesTest(){
+      return currentTest && currentTest.id === "claves";
+    }
+
+    function setupClaves(){
+
+	  const data = QUESTIONS.claves;
+
+	  questions = [data];
+
+	  qIndex = 0;
+
+	  clavesRunning = false;
+	  clavesIndex = 0;
+	  clavesCorrect = 0;
+	  clavesWrong = 0;
+
+	  clavesSecondsLeft = data.timeLimit || 120;
+
+	  // ORDEN FIJO PARA TODA LA SESIÓN
+	  clavesPadOrder = Object.keys(data.key)
+		.sort(()=>Math.random()-0.5);
+
+	  $("practiceTitle").textContent =
+		`${currentTest.abbr} · ${currentTest.name}`;
+
+	  $("digitMenu").classList.add("hidden");
+	}
+
+    function renderClaves(){
+      const data = QUESTIONS.claves;
+      const key = data.key;
+
+      $("counter").innerHTML = `
+        <div class="clavesHud">
+          <div class="clavesTime" id="clavesTime">${clavesSecondsLeft}s</div>
+          <div class="clavesStats">
+            <div>Aciertos: <span id="clavesOk">${clavesCorrect}</span></div>
+            <div>Errores: <span id="clavesBad">${clavesWrong}</span></div>
+          </div>
+        </div>
+      `;
+
+      const keyHtml = Object.keys(key).map(n => `
+        <div class="clavesKeyItem">
+          <b>${n}</b>
+          <span>${key[n]}</span>
+        </div>
+      `).join("");
+
+      $("qText").innerHTML = `
+        <div class="clavesPanel">
+          <div class="clavesKey">${keyHtml}</div>
+          <div class="clavesPromptLabel">${clavesRunning ? "Elige el símbolo de:" : "Pulsa iniciar cuando estés listo"}</div>
+          <div class="clavesNumber" id="clavesNumber">${clavesRunning ? data.sequence[clavesIndex] : "—"}</div>
+          ${clavesRunning ? "" : `<button class="clavesStart" id="btnStartClaves">Iniciar 120s</button>`}
+        </div>
+      `;
+
+      $("qSub").innerHTML = "&nbsp;";
+      $("validBox").classList.remove("active");
+      $("selfCheck").classList.remove("active");
+      $("validList").innerHTML = "";
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      $("btnNext").classList.add("hidden");
+
+      const timerEl = $("timer");
+      if(timerEl) timerEl.style.display = "none";
+
+      renderSymbolPad();
+
+      if(!clavesRunning){
+        $("answers").classList.add("locked");
+        $("btnStartClaves").onclick = startClaves;
+      } else {
+        $("answers").classList.remove("locked");
+      }
+    }
+
+	function renderSymbolPad(){
+
+	  const key = QUESTIONS.claves.key;
+
+	  $("answers").className = "symbolPad";
+
+	  // usa el mismo orden toda la sesión
+	  $("answers").innerHTML = clavesPadOrder.map(n => `
+		<button class="symbolBtn" data-n="${n}">
+		  ${key[n]}
+		</button>
+	  `).join("");
+
+	  document.querySelectorAll(".symbolBtn").forEach(btn=>{
+
+		btn.onclick = () =>
+		  handleClavesAnswer(Number(btn.dataset.n));
+
+	  });
+
+	}
+
+    function startClaves(){
+      const data = QUESTIONS.claves;
+
+      clavesRunning = true;
+      clavesIndex = 0;
+      clavesCorrect = 0;
+      clavesWrong = 0;
+      clavesSecondsLeft = data.timeLimit || 120;
+
+      renderClaves();
+
+      clearInterval(clavesTimerInt);
+      clavesTimerInt = setInterval(()=>{
+        clavesSecondsLeft--;
+
+        const t = $("clavesTime");
+        if(t) t.textContent = clavesSecondsLeft + "s";
+
+        if(clavesSecondsLeft <= 0){
+          finishClaves();
+        }
+      },1000);
+    }
+
+    function handleClavesAnswer(n){
+      if(!clavesRunning) return;
+
+      const data = QUESTIONS.claves;
+      const expected = data.sequence[clavesIndex];
+
+      if(n === expected){
+        clavesCorrect++;
+        document.body.classList.add("clavesFlashOk");
+        setTimeout(()=>document.body.classList.remove("clavesFlashOk"), 90);
+      } else {
+        clavesWrong++;
+        document.body.classList.add("clavesFlashBad");
+        setTimeout(()=>document.body.classList.remove("clavesFlashBad"), 110);
+      }
+
+      clavesIndex++;
+
+      if(clavesIndex >= data.sequence.length){
+        finishClaves();
+        return;
+      }
+
+      const num = $("clavesNumber");
+      if(num) num.textContent = data.sequence[clavesIndex];
+
+      const ok = $("clavesOk");
+      const bad = $("clavesBad");
+      if(ok) ok.textContent = clavesCorrect;
+      if(bad) bad.textContent = clavesWrong;
+    }
+
+    function finishClaves(){
+      clearInterval(clavesTimerInt);
+      clavesRunning = false;
+
+      const neto = Math.max(0, clavesCorrect - clavesWrong);
+
+      $("counter").textContent = "Claves finalizado";
+      $("qText").innerHTML = `
+        <div class="clavesResult">
+          <h3>Resultado</h3>
+          <div class="clavesResultGrid">
+            <div class="clavesResultBox"><b>${clavesCorrect}</b><span>Aciertos</span></div>
+            <div class="clavesResultBox"><b>${clavesWrong}</b><span>Errores</span></div>
+            <div class="clavesResultBox"><b>${neto}</b><span>Neto</span></div>
+          </div>
+        </div>
+      `;
+      $("qSub").innerHTML = "&nbsp;";
+      $("answers").innerHTML = `<button class="primary" id="btnRestartClaves">Reiniciar Claves</button>`;
+      $("answers").className = "answers";
+      $("feedback").textContent = "";
+      $("btnNext").classList.add("hidden");
+
+      $("btnRestartClaves").onclick = () => {
+        setupClaves();
+        showQuestion();
+      };
+    }
+
+
+    function getQuestionTime(){
+      const currentQuestion = questions[qIndex];
+      if(!currentQuestion || !currentQuestion.qImg) return null;
+
+      const n = qIndex + 1;
+
+      // Matrices y Balanzas:
+      // ítems 1-18 => 20s
+      // ítems 19-34 => 30s
+      return n <= 18 ? 20 : 30;
+    }
+
+    function startTimer(){
+      clearInterval(timerInt);
+
+      const timerEl = $("timer");
+      if(!timerEl) return;
+
+      const limit = getQuestionTime();
+
+      if(limit === null){
+        timerEl.style.display = "none";
+        return;
+      }
+
+      timerEl.style.display = "flex";
+      secondsLeft = limit;
+      timerEl.textContent = secondsLeft;
+      timerEl.className = "timer";
+
+      timerInt = setInterval(()=>{
+        secondsLeft--;
+
+        timerEl.textContent = secondsLeft;
+
+        if(secondsLeft <= 5){
+          timerEl.className = "timer warn";
+        }
+
+        if(secondsLeft <= 0){
+          clearInterval(timerInt);
+
+          const currentQuestion = questions[qIndex];
+
+          document.querySelectorAll(".answer").forEach((b,idx)=>{
+            if(idx === currentQuestion.c){
+              b.classList.add("correct");
+            }
+          });
+
+          $("feedback").textContent = "Tiempo agotado";
+          $("feedback").className = "feedback bad";
+
+          $("btnNext").classList.remove("hidden");
+          $("btnNext").textContent =
+            qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+
+          answered = true;
+        }
+      },1000);
+    }
+
+
+    function showQuestion(){
+      const currentQuestion = questions[qIndex];
+      answered = false;
+      digitInput = "";
+
+      if(isCubosTest()){
+        if(!cubosRunning){
+          startCubosAuto();
+        } else {
+          renderCubos();
+        }
+        return;
+      }
+
+      if(isClavesTest()){
+        renderClaves();
+        return;
+      }
+
+      if(isDigitQuestion(currentQuestion)){
+        const mode = (QUESTIONS.digitos && QUESTIONS.digitos[digitModeIndex]) ? QUESTIONS.digitos[digitModeIndex] : {modeName:'Retención de Dígitos'};
+
+        $("counter").textContent = `${mode.modeName} · Ítem ${currentQuestion.item} · Intento ${currentQuestion.intento}`;
+        $("qText").innerHTML = `
+          <div class="digitPanel">
+            <div class="digitListen" id="digitStatus">Pulsa reproducir</div>
+            <button class="playBtn" id="btnPlayDigits">▶ Reproducir</button>
+            <div class="digitInput" id="digitInput">—</div>
+            <div class="digitAnswer" id="digitAnswer"></div>
+          </div>
+        `;
+        $("qSub").innerHTML = "&nbsp;";
+
+        $("validBox").classList.remove("active");
+        $("selfCheck").classList.remove("active");
+        $("validList").innerHTML = "";
+        $("feedback").textContent = "";
+        $("feedback").className = "feedback";
+        $("btnNext").classList.add("hidden");
+
+        const timerEl = $("timer");
+        if(timerEl) timerEl.style.display = "none";
+
+        renderDigitKeypad();
+        $("answers").classList.add("locked");
+        $("btnPlayDigits").onclick = playCurrentDigits;
+        return;
+      }
+
+      if(!currentQuestion){
+        $("counter").textContent = "Sin contenido";
+        $("qText").textContent = "No hay preguntas cargadas para esta prueba.";
+        $("qSub").innerHTML = "&nbsp;";
+        $("answers").innerHTML = "";
+        $("answers").className = "answers";
+        $("validBox").classList.remove("active");
+        $("selfCheck").classList.remove("active");
+        $("feedback").textContent = "";
+        $("btnNext").classList.add("hidden");
+        const timerEl = $("timer");
+        if(timerEl) timerEl.style.display = "none";
+        return;
+      }
+
+      $("counter").textContent = `Pregunta ${qIndex + 1}/${questions.length}`;
+
+      if(currentQuestion.qImg){
+        $("qText").innerHTML = `<img class="matrixImg" src="${currentQuestion.qImg}" alt="Matriz ${currentQuestion.item || (qIndex + 1)}" onerror="tryMatrixFallback(this)">`;
+        $("qSub").textContent = `Elige la respuesta correcta: 1, 2, 3, 4 o 5`;
+      } else {
+        $("qText").textContent = currentQuestion.q;
+        $("qSub").textContent = currentQuestion.sub;
+      }
+
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      startTimer();
+      $("btnNext").classList.add("hidden");
+
+      $("validBox").classList.remove("active");
+      $("selfCheck").classList.remove("active");
+      $("validList").innerHTML = "";
+
+      if(currentQuestion.oral){
+        $("answers").className = "answers";
+        $("answers").innerHTML = `<button class="primary" id="btnShowValid">Mostrar respuestas posibles</button>`;
+        $("btnShowValid").onclick = showValidAnswers;
+      } else {
+        const opts = currentQuestion.qImg ? ["1","2","3","4","5"] : currentQuestion.a;
+        $("answers").className = currentQuestion.qImg ? "matrixAnswers" : "answers";
+        $("answers").innerHTML = opts.map((txt,i) => `
+          <button class="answer" data-i="${i}">${txt}</button>
+        `).join("");
+
+        document.querySelectorAll(".answer").forEach(btn => {
+          btn.onclick = () => answer(Number(btn.dataset.i));
+        });
+      }
+    }
+
+
+    function showValidAnswers(){
+      if(!questions[qIndex]) return;
+      const currentQuestion = questions[qIndex];
+      $("validList").innerHTML = (currentQuestion.valid || []).map(x => `<li>${x}</li>`).join("");
+      $("validBox").classList.add("active");
+      $("selfCheck").classList.add("active");
+      $("btnNext").classList.add("hidden");
+    }
+
+    function selfMark(ok){
+      $("feedback").textContent = ok ? "¡Muy bien!" : "Sigue practicando";
+      $("feedback").className = ok ? "feedback ok" : "feedback bad";
+      $("btnNext").classList.remove("hidden");
+      $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+    }
+
+    function answer(i){
+      if(answered) return;
+
+      clearInterval(timerInt);
+      answered = true;
+      const currentQuestion = questions[qIndex];
+
+      document.querySelectorAll(".answer").forEach(btn => {
+        const idx = Number(btn.dataset.i);
+        if(idx === currentQuestion.c) btn.classList.add("correct");
+        else if(idx === i) btn.classList.add("wrong");
+      });
+
+      if(i === currentQuestion.c){
+        $("feedback").textContent = "¡Correcto!";
+        $("feedback").className = "feedback ok";
+      } else {
+        $("feedback").textContent = "No es correcto";
+        $("feedback").className = "feedback bad";
+      }
+
+      $("btnNext").classList.remove("hidden");
+      $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+    }
+
+    $("btnCit").onclick = () => { mode = "cit"; render(); };
+    $("btnAll").onclick = () => { mode = "all"; render(); };
+
+    $("btnClose").onclick = () => {
+      clearInterval(timerInt);
+      clearInterval(clavesTimerInt);
+      clearInterval(cubosTimerInt);
+      if("speechSynthesis" in window) speechSynthesis.cancel();
+      cubosRunning = false;
+      clavesRunning = false;
+      playingDigits = false;
+      $("practice").classList.remove("active");
+      document.body.classList.remove("practiceMode");
+    };
+
+    $("btnGood").onclick = () => selfMark(true);
+    $("btnBad").onclick = () => selfMark(false);
+
+    $("btnNext").onclick = () => {
+      clearInterval(timerInt);
+      clearInterval(clavesTimerInt);
+      clearInterval(cubosTimerInt);
+      if("speechSynthesis" in window) speechSynthesis.cancel();
+      playingDigits = false;
+
+      if(isCubosTest()){
+        if(cubosIndex < QUESTIONS.cubos.patterns.length - 1){
+          cubosIndex++;
+          cubosRunning = false;
+          const pattern = QUESTIONS.cubos.patterns[cubosIndex];
+          const size = pattern.size || 2;
+          cubosCurrent = Array(size * size).fill("E");
+          cubosSelectedFace = "W";
+		  cubosSecondsLeft = QUESTIONS.cubos.timeLimit || 45;
+          $("feedback").textContent = "";
+          $("feedback").className = "feedback";
+          showQuestion();
+        } else {
+          cubosRunning = false;
+          $("practice").classList.remove("active");
+          document.body.classList.remove("practiceMode");
+        }
+        return;
+      }
+
+      if(qIndex < questions.length - 1){
+        qIndex++;
+        showQuestion();
+      } else {
+        $("practice").classList.remove("active");
+        document.body.classList.remove("practiceMode");
+      }
+    };
+
+    render();
+
+  </script>
+</body>
+</html>
