@@ -606,6 +606,60 @@
 	  }
 	}
 
+    /* ===== ROMPECABEZAS VISUALES ===== */
+    .rvAnswers{
+      display:grid;
+      gap:10px;
+      justify-items:center;
+    }
+
+    .rvAnswersGrid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(54px, 1fr));
+      gap:8px;
+      width:min(100%, 360px);
+    }
+
+    .rvOption{
+      min-height:46px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      font-size:18px;
+      font-weight:900;
+      display:grid;
+      place-items:center;
+    }
+
+    .rvOption.selected{
+      background:#eff6ff;
+      border-color:#2563eb;
+      box-shadow:0 0 0 2px rgba(37,99,235,.16);
+      color:#2563eb;
+    }
+
+    .rvOption.correct{
+      background:#ecfdf3;
+      border-color:#86efac;
+      color:#166534;
+    }
+
+    .rvOption.wrong{
+      background:#fef2f2;
+      border-color:#fca5a5;
+      color:#991b1b;
+    }
+
+    .rvOk{
+      margin-top:2px;
+      min-width:86px;
+      padding:9px 14px;
+      border-radius:10px;
+      background:#2563eb;
+      color:#fff;
+      font-weight:900;
+    }
+
 	.answers{
 	  display:grid;
 	  grid-template-columns:repeat(2,1fr);
@@ -1305,8 +1359,37 @@
         { qImg:"img/bal/bal_36.png", respuesta:5, c:4, item:"34" }
       ],
       rompecabezas:[
-        {q:"Forma objetivo: ■", sub:"¿Qué dos piezas la forman mejor?", a:["▌ + ▐","▲ + ○","— + │","● + ●"], c:0, h:"Dos mitades verticales forman el cuadrado.", e:"▌ + ▐ forman una figura cuadrada."},
-        {q:"Forma objetivo: ▲", sub:"Elige la pieza compatible.", a:["Triángulo","Círculo","Cuadrado","Línea"], c:0, h:"Busca la misma familia de forma.", e:"Un triángulo es compatible con ▲."}
+        { qImg:"img/rv/romp_01.png", correct:[1,2,6], item:"E" },
+        { qImg:"img/rv/romp_02.png", correct:[3,4,5], item:"P" },
+        { qImg:"img/rv/romp_03.png", correct:[2,3,5], item:"1" },
+        { qImg:"img/rv/romp_04.png", correct:[2,4,5], item:"2" },
+        { qImg:"img/rv/romp_05.png", correct:[2,3,4], item:"3" },
+        { qImg:"img/rv/romp_06.png", correct:[1,3,5], item:"4" },
+        { qImg:"img/rv/romp_07.png", correct:[1,4,5], item:"5" },
+        { qImg:"img/rv/romp_08.png", correct:[1,2,6], item:"6" },
+        { qImg:"img/rv/romp_09.png", correct:[2,4,5], item:"7" },
+        { qImg:"img/rv/romp_10.png", correct:[3,5,6], item:"8" },
+        { qImg:"img/rv/romp_11.png", correct:[1,2,5], item:"9" },
+        { qImg:"img/rv/romp_12.png", correct:[3,4,5], item:"10" },
+        { qImg:"img/rv/romp_13.png", correct:[2,5,6], item:"11" },
+        { qImg:"img/rv/romp_14.png", correct:[1,3,6], item:"12" },
+        { qImg:"img/rv/romp_15.png", correct:[3,4,6], item:"13" },
+        { qImg:"img/rv/romp_16.png", correct:[2,3,5], item:"14" },
+        { qImg:"img/rv/romp_17.png", correct:[2,3,4], item:"15" },
+        { qImg:"img/rv/romp_18.png", correct:[1,3,5], item:"16" },
+        { qImg:"img/rv/romp_19.png", correct:[1,4,6], item:"17" },
+        { qImg:"img/rv/romp_20.png", correct:[1,2,4], item:"18" },
+        { qImg:"img/rv/romp_21.png", correct:[3,4,6], item:"19" },
+        { qImg:"img/rv/romp_22.png", correct:[1,2,5], item:"20" },
+        { qImg:"img/rv/romp_23.png", correct:[2,5,6], item:"21" },
+        { qImg:"img/rv/romp_24.png", correct:[1,3,4], item:"22" },
+        { qImg:"img/rv/romp_25.png", correct:[2,4,6], item:"23" },
+        { qImg:"img/rv/romp_26.png", correct:[3,5,6], item:"24" },
+        { qImg:"img/rv/romp_27.png", correct:[2,3,6], item:"25" },
+        { qImg:"img/rv/romp_28.png", correct:[1,4,5], item:"26" },
+        { qImg:"img/rv/romp_29.png", correct:[1,4,6], item:"27" },
+        { qImg:"img/rv/romp_30.png", correct:[1,2,4], item:"28" },
+        { qImg:"img/rv/romp_31.png", correct:[1,3,6], item:"29" }
       ],
       imagenes:[
         {q:"🐶 · 🚗 · ⭐", sub:"Elige el mismo orden.", a:["🐶 · 🚗 · ⭐","🚗 · 🐶 · ⭐","⭐ · 🚗 · 🐶","🐶 · ⭐ · 🚗"], c:0, h:"Recuerda la primera imagen.", e:"El orden correcto es perro, coche, estrella."},
@@ -1346,6 +1429,7 @@
     let digitModeIndex = 0;
     let digitInput = "";
     let playingDigits = false;
+    let rvSelected = [];
     let timerInt = null;
     let secondsLeft = 20;
 
@@ -1419,6 +1503,7 @@
 	  answered = false;
 	  digitInput = "";
 	  playingDigits = false;
+	  rvSelected = [];
 
 	  clearInterval(timerInt);
 	  clearInterval(cubosTimerInt);
@@ -1480,6 +1565,10 @@
 
     function isCubosTest(){
       return currentTest && currentTest.id === "cubos";
+    }
+
+    function isRompecabezasTest(){
+      return currentTest && currentTest.id === "rompecabezas";
     }
 
     function getCubosTimeLimit(index){
@@ -2043,6 +2132,7 @@
 
     function getQuestionTime(){
       const currentQuestion = questions[qIndex];
+      if(isRompecabezasTest()) return 30;
       if(!currentQuestion || !currentQuestion.qImg) return null;
 
       const n = qIndex + 1;
@@ -2090,11 +2180,20 @@
 
           const currentQuestion = questions[qIndex];
 
-          document.querySelectorAll(".answer").forEach((b,idx)=>{
-            if(idx === currentQuestion.c){
-              b.classList.add("correct");
-            }
-          });
+          if(isRompecabezasTest()){
+            document.querySelectorAll(".rvOption").forEach(btn=>{
+              const value = Number(btn.dataset.value);
+              if((currentQuestion.correct || []).includes(value)){
+                btn.classList.add("correct");
+              }
+            });
+          } else {
+            document.querySelectorAll(".answer").forEach((b,idx)=>{
+              if(idx === currentQuestion.c){
+                b.classList.add("correct");
+              }
+            });
+          }
 
           $("feedback").textContent = "Tiempo agotado";
           $("feedback").className = "feedback bad";
@@ -2190,6 +2289,36 @@
 
       $("counter").textContent = `Pregunta ${qIndex + 1}/${questions.length}`;
 
+      if(isRompecabezasTest()){
+        rvSelected = [];
+
+        $("qText").innerHTML = `<img class="matrixImg" src="${currentQuestion.qImg}" alt="Rompecabezas ${currentQuestion.item || (qIndex + 1)}">`;
+        $("qSub").textContent = "Selecciona 3 piezas y pulsa OK.";
+
+        $("feedback").textContent = "";
+        $("feedback").className = "feedback";
+        startTimer();
+        $("btnNext").classList.add("hidden");
+
+        $("validBox").classList.remove("active");
+        $("selfCheck").classList.remove("active");
+        $("validList").innerHTML = "";
+
+        $("answers").className = "rvAnswers";
+        $("answers").innerHTML = `
+          <div class="rvAnswersGrid">
+            ${[1,2,3,4,5,6].map(n => `<button class="rvOption" data-value="${n}">${n}</button>`).join("")}
+          </div>
+          <button class="rvOk" id="btnRvOk">OK</button>
+        `;
+
+        document.querySelectorAll(".rvOption").forEach(btn => {
+          btn.onclick = () => toggleRvOption(Number(btn.dataset.value));
+        });
+        $("btnRvOk").onclick = checkRvAnswer;
+        return;
+      }
+
       if(currentQuestion.qImg){
         $("qText").innerHTML = `<img class="matrixImg" src="${currentQuestion.qImg}" alt="Matriz ${currentQuestion.item || (qIndex + 1)}" onerror="tryMatrixFallback(this)">`;
         $("qSub").textContent = `Elige la respuesta correcta: 1, 2, 3, 4 o 5`;
@@ -2237,6 +2366,70 @@
     function selfMark(ok){
       $("feedback").textContent = ok ? "¡Muy bien!" : "Sigue practicando";
       $("feedback").className = ok ? "feedback ok" : "feedback bad";
+      $("btnNext").classList.remove("hidden");
+      $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+    }
+
+    function toggleRvOption(value){
+      if(answered) return;
+
+      const pos = rvSelected.indexOf(value);
+
+      if(pos >= 0){
+        rvSelected.splice(pos, 1);
+      } else {
+        if(rvSelected.length >= 3){
+          $("feedback").textContent = "Solo puedes seleccionar 3 piezas.";
+          $("feedback").className = "feedback bad";
+          return;
+        }
+        rvSelected.push(value);
+      }
+
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+
+      document.querySelectorAll(".rvOption").forEach(btn=>{
+        const n = Number(btn.dataset.value);
+        btn.classList.toggle("selected", rvSelected.includes(n));
+      });
+    }
+
+    function sameSet(a,b){
+      if(!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+      const aa = [...a].sort((x,y)=>x-y).join(",");
+      const bb = [...b].sort((x,y)=>x-y).join(",");
+      return aa === bb;
+    }
+
+    function checkRvAnswer(){
+      if(answered) return;
+
+      if(rvSelected.length !== 3){
+        $("feedback").textContent = "Selecciona exactamente 3 piezas.";
+        $("feedback").className = "feedback bad";
+        return;
+      }
+
+      clearInterval(timerInt);
+      answered = true;
+
+      const currentQuestion = questions[qIndex];
+      const correct = currentQuestion.correct || [];
+      const ok = sameSet(rvSelected, correct);
+
+      document.querySelectorAll(".rvOption").forEach(btn=>{
+        const n = Number(btn.dataset.value);
+        if(correct.includes(n)){
+          btn.classList.add("correct");
+        } else if(rvSelected.includes(n)){
+          btn.classList.add("wrong");
+        }
+      });
+
+      $("feedback").textContent = ok ? "¡Correcto!" : "No es correcto";
+      $("feedback").className = ok ? "feedback ok" : "feedback bad";
+
       $("btnNext").classList.remove("hidden");
       $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
     }
