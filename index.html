@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>HISC</title>
   <style>
     :root{
@@ -13,6 +13,12 @@
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
     button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+    html, body, button, .cubeCell, .cubeTool, .cubeActions button{
+      touch-action:manipulation;
+      -webkit-user-select:none;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
     .app{width:min(var(--max),calc(100% - 24px));margin:0 auto;padding:22px 0 40px}
     .title{margin:0 0 16px;font-size:22px;letter-spacing:-.04em;font-weight:800}
     .mode{display:flex;gap:8px;margin-bottom:18px}
@@ -29,9 +35,20 @@
     .practice{display:none;background:white;border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:16px}
     .practice.active{display:block}
     .practiceTop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
-    .practiceTop h2{margin:0;font-size:22px;letter-spacing:-.03em}
+    .practiceTop h2{margin:0;font-size:20px;letter-spacing:-.03em}
     .smallBtn{padding:8px 11px;border-radius:10px;background:#f2f4f7;color:#344054;font-weight:700}
-    .counter{color:var(--muted);font-size:13px;margin-bottom:8px}
+	.counter{
+	  color:var(--muted);
+	  font-size:11px;
+	  font-weight:800;
+
+	  margin-left:auto;
+
+	  text-align:right;
+	  line-height:1.25;
+
+	  flex:0 0 auto;
+	}
     .question{min-height:120px;display:grid;place-items:center;text-align:center;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:12px}
     .question strong{display:block;font-size:25px;letter-spacing:-.03em}
     .question span{display:block;margin-top:6px;color:var(--muted);font-size:14px}
@@ -233,7 +250,10 @@
     }
 	
 	.cubeGrid.work[style*="--gridSize:3"]{
-	  --cubeSize:56px;
+	  --cubeSize:50px;
+	}
+	.cubeGrid.work[style*="--gridSize:5"]{
+	  --cubeSize:28px;
 	}
 
     /* Rotación 45º para diseños de Cubos girados */
@@ -297,7 +317,7 @@
     .cubeTool{
       display:grid;
       place-items:center;
-      min-height:48px;
+      min-height:44px;
       border:1px solid var(--line);
       background:#fff;
       border-radius:10px;
@@ -343,6 +363,22 @@
       color:#344054;
     }
 
+    .cubeSkip{
+      width:40px;
+      height:34px;
+      padding:0;
+      display:grid;
+      place-items:center;
+      font-size:28px;
+      font-weight:400;
+      line-height:1;
+    }
+
+    #btnNext{
+      min-width:96px;
+      text-align:center;
+    }
+
     body.cubeFlashOk .question{
       border-color:#86efac;
       background:#f0fdf4;
@@ -362,6 +398,13 @@
       .cubeGrid.target{
         --cubeSize:58px;
       }
+	  
+	  .cubeGrid.work[style*="--gridSize:3"]{
+		  --cubeSize:46px;
+		}
+	  .cubeGrid.work[style*="--gridSize:5"]{
+		  --cubeSize:36px;
+	  }
 
       .cubeGrid.work{
         --cubeSize:82px;
@@ -382,8 +425,8 @@
       }
 
       .cubeMini{
-        width:38px;
-        height:38px;
+        width:36px;
+        height:36px;
       }
     }
 
@@ -647,23 +690,17 @@
 
 	
 	.feedback{
-	  height:32px;
-	  min-height:32px;
-	  max-height:32px;
-
-	  display:inline-flex;
+	  min-height:36px;
+	  display:flex;
 	  align-items:center;
-	  justify-content:center;
-
+	  justify-content:flex-start;
+	  flex:1;
 	  margin:0;
-
-	  font-size:22px;
-	  font-weight:900;
-
-	  text-align:center;
-	  letter-spacing:-0.03em;
-
-	  overflow:hidden;
+	  font-size:16px;
+	  font-weight:850;
+	  text-align:left;
+	  letter-spacing:-0.02em;
+	  line-height:1.15;
 	}
 
 	.feedback.ok{
@@ -674,19 +711,34 @@
 	  color:#dc2626;
 	}
 
-	.timer{
+	.topHud{
 	  display:flex;
-	  justify-content:center;
 	  align-items:center;
+	  gap:8px;
+	  margin:2px 0 10px;
+	  width:100%;
+	}
 
-	  margin:10px 0 14px;
+	.topHud .cubeStats,
+	.topHud .clavesStats{
+	  margin-left:auto;
+	}
 
-	  font-size:34px;
+	.timer{
+	  margin:0;
+
+	  display:flex;
+	  align-items:center;
+	  justify-content:flex-start;
+
+	  font-size:22px;
 	  font-weight:900;
 
 	  color:#111827;
 
 	  letter-spacing:-0.04em;
+
+	  flex:0 0 auto;
 	}
 
 	.timer.warn{
@@ -697,15 +749,18 @@
 	  display:flex;
 	  gap:8px;
 	  justify-content:flex-end;
-
-	  margin-top:10px;
+	  align-items:center;
+	  margin-top:0;
+	  margin-left:auto;
 	}
 	.feedbackWrap{
 	  display:flex;
 	  align-items:center;
-	  justify-content:center;
-	  gap:10px;
-	  min-height:34px;
+	  justify-content:space-between;
+	  gap:12px;
+	  min-height:38px;
+	  width:100%;
+	  margin-top:18px;
 	}
 
 	.primary{
@@ -763,6 +818,16 @@
 		padding:8px 0;
 		z-index:2;
 	  }
+	  
+	  .question{
+		  min-height:auto;
+		  padding:8px;
+		}
+
+		.matrixImg{
+		  max-height:none;
+		  width:100%;
+		}
 
 	  .mode button{
 		flex:1;
@@ -799,9 +864,13 @@
       </div>
 
       <div id="digitMenu" class="digitMenu hidden"></div>
-      <div id="counter" class="counter">Pregunta 1/2</div>
 
-      <div id="timer" class="timer">20</div>
+      <div id="topHud" class="topHud">
+	  <div id="timer" class="timer">
+		<span id="timerValue">20</span>
+	  </div>
+	  <div id="counter" class="counter">Pregunta 1/2</div>
+	</div>
 
       <div class="question">
         <div>
@@ -973,7 +1042,31 @@
 				"W","R","BL",
 				"W","TR","TL"
 			  ]
-			}		  
+			},
+
+		{
+		  name:"Diseño 11",
+		  img:"img/cub/cub_11.png",
+		  size:3,
+		  rotated:true,
+		  target:[
+			"TL","TR","BL",
+			"BL","BR","TL",
+			"TR","TL","TL"
+		  ]
+		}, {
+		  name:"Diseño 12",
+		  img:"img/cub/cub_12.png",
+		  size:5,
+		  rotated:true,
+		  target:[
+			"W","W","BL","W","W",
+			"W","W","R","W","W",
+			"TR","R","TL","BR","BL",
+			"W","W","BR","W","W",
+			"W","W","TR","W","W"
+		  ]
+		}			
 		]
       },
       analogias:[
@@ -1351,6 +1444,17 @@
       return currentTest && currentTest.id === "cubos";
     }
 
+    function getCubosTimeLimit(index){
+      const patterns = QUESTIONS.cubos.patterns;
+      const pattern = patterns[index];
+      if(!pattern) return QUESTIONS.cubos.timeLimit || 45;
+
+      const isLastTwo = index >= patterns.length - 2;
+      if(isLastTwo) return 115;
+
+      return (pattern.size || 2) >= 3 ? 75 : 45;
+    }
+
     function setupCubos(){
       const data = QUESTIONS.cubos;
 
@@ -1361,8 +1465,7 @@
       cubosIndex = 0;
       cubosCurrent = ["E","E","E","E"];
       cubosSelectedFace = "W";
-      cubosSecondsLeft =
-      cubosSecondsLeft = data.timeLimit || 45;
+      cubosSecondsLeft = getCubosTimeLimit(cubosIndex);
 
       $("practiceTitle").textContent = `${currentTest.abbr} · ${currentTest.name}`;
       $("digitMenu").classList.add("hidden");
@@ -1399,15 +1502,13 @@
       const data = QUESTIONS.cubos;
       const pattern = data.patterns[cubosIndex];
 
-      $("counter").innerHTML = `
-        <div class="cubeHud">
-          <div class="cubeTime" id="cubeTime">${cubosSecondsLeft}s</div>
-          <div class="cubeStats">
-            <div>${pattern.name}</div>
-            <div>${cubosIndex + 1}/${data.patterns.length}</div>
-          </div>
-        </div>
-      `;
+      $("topHud").innerHTML = `
+		  <div class="cubeTime" id="cubeTime">${cubosSecondsLeft}s</div>
+		  <div class="cubeStats">
+			<div>${pattern.name}</div>
+			<div>${cubosIndex + 1}/${data.patterns.length}</div>
+		  </div>
+		`;
 
       $("qText").innerHTML = `
         <div class="cubePanel">
@@ -1430,9 +1531,8 @@
           ${renderCubeTools()}
 
           <div class="cubeActions">
-            <button class="cubeCheck" id="btnCheckCubos">Validar</button>
-            <button class="cubeClear" id="btnClearCubos">Limpiar</button>
-            <button class="cubeClear" id="btnSkipCubos">Siguiente cubo</button>
+            <button class="cubeCheck" id="btnCheckCubos" aria-label="Validar">OK</button>
+            <button class="cubeClear cubeSkip" id="btnSkipCubos" aria-label="Saltar cubo">›</button>
           </div>
         </div>
       `;
@@ -1442,9 +1542,6 @@
       $("selfCheck").classList.remove("active");
       $("validList").innerHTML = "";
       $("btnNext").classList.add("hidden");
-
-      const timerEl = $("timer");
-      if(timerEl) timerEl.style.display = "none";
 
       document.querySelectorAll(".cubeTool").forEach(btn=>{
         btn.onclick = ()=>{
@@ -1464,14 +1561,6 @@
 
       $("btnCheckCubos").onclick = checkCubos;
 
-      $("btnClearCubos").onclick = ()=>{
-        if(!cubosRunning) return;
-        const pattern = QUESTIONS.cubos.patterns[cubosIndex];
-        const size = pattern.size || 2;
-        cubosCurrent = Array(size * size).fill("E");
-        renderCubos();
-      };
-
       $("btnSkipCubos").onclick = ()=>{
         clearInterval(cubosTimerInt);
 
@@ -1488,7 +1577,7 @@
 
         cubosCurrent = Array(size * size).fill("E");
         cubosSelectedFace = "W";
-        cubosSecondsLeft = size >= 3 ? 75 : 45;
+        cubosSecondsLeft = getCubosTimeLimit(cubosIndex);
 
         $("feedback").textContent = "";
         $("feedback").className = "feedback";
@@ -1505,7 +1594,7 @@
       cubosRunning = true;
       cubosCurrent = Array(size * size).fill("E");
       cubosSelectedFace = "W";
-      cubosSecondsLeft = data.timeLimit || 45;
+      cubosSecondsLeft = getCubosTimeLimit(cubosIndex);
 
       $("feedback").textContent = "";
       $("feedback").className = "feedback";
@@ -1554,7 +1643,7 @@
       } else {
         document.body.classList.add("cubeFlashBad");
         setTimeout(()=>document.body.classList.remove("cubeFlashBad"), 160);
-        $("feedback").textContent = "No coincide";
+        $("feedback").textContent = "No es correcto, sigue intentándolo";
         $("feedback").className = "feedback bad";
       }
     }
@@ -1590,64 +1679,59 @@
     }
 
     function speakDigit(n){
-      return new Promise(resolve=>{
-        if(!("speechSynthesis" in window)){
-          resolve();
-          return;
-        }
+	  return new Promise(resolve=>{
 
-        const u = new SpeechSynthesisUtterance(String(n));
-        u.lang = "es-ES";
-        u.rate = 1.18;
-        u.pitch = 1;
-        u.onend = resolve;
-        u.onerror = resolve;
-        speechSynthesis.speak(u);
-      });
-    }
+		if(!("speechSynthesis" in window)){
+		  resolve();
+		  return;
+		}
+
+		const u = new SpeechSynthesisUtterance(String(n));
+
+		u.lang = "es-ES";
+		u.rate = 0.95;
+		u.pitch = 1;
+
+		u.onend = resolve;
+		u.onerror = resolve;
+
+		speechSynthesis.speak(u);
+	  });
+	}
 
     function wait(ms){
       return new Promise(resolve=>setTimeout(resolve, ms));
     }
 
-    async function playCurrentDigits(){
+   async function playCurrentDigits(){
+
 	  if(playingDigits) return;
+
 	  const q = questions[qIndex];
 	  if(!isDigitQuestion(q)) return;
 
 	  playingDigits = true;
+
 	  speechSynthesis.cancel();
 
 	  $("digitStatus").textContent = "Escucha...";
 	  $("btnPlayDigits").disabled = true;
 	  $("answers").classList.add("locked");
 
-	  const gap = 450;
+	  const gap = 750;
 
-	q.seq.forEach((n, i) => {
+	  for(const n of q.seq){
 
-	  const u = new SpeechSynthesisUtterance(String(n));
+		await speakDigit(n);
 
-	  u.lang = "es-ES";
-	  u.rate = 1.15;
-	  u.pitch = 1;
-
-	  // último dígito
-	  if(i === q.seq.length - 1){
-
-		u.onend = () => {
-		  $("digitStatus").textContent = "Ahora responde";
-		  $("btnPlayDigits").disabled = false;
-		  $("answers").classList.remove("locked");
-		  playingDigits = false;
-		};
+		await wait(gap);
 	  }
 
-	  setTimeout(() => {
-		speechSynthesis.speak(u);
-	  }, i * gap);
+	  $("digitStatus").textContent = "Ahora responde";
+	  $("btnPlayDigits").disabled = false;
+	  $("answers").classList.remove("locked");
 
-	});
+	  playingDigits = false;
 	}
 
     function formatDigits(value){
@@ -1769,15 +1853,13 @@
       const data = QUESTIONS.claves;
       const key = data.key;
 
-      $("counter").innerHTML = `
-        <div class="clavesHud">
-          <div class="clavesTime" id="clavesTime">${clavesSecondsLeft}s</div>
-          <div class="clavesStats">
-            <div>Aciertos: <span id="clavesOk">${clavesCorrect}</span></div>
-            <div>Errores: <span id="clavesBad">${clavesWrong}</span></div>
-          </div>
-        </div>
-      `;
+      $("topHud").innerHTML = `
+	  <div class="clavesTime" id="clavesTime">${clavesSecondsLeft}s</div>
+	  <div class="clavesStats">
+		<div>Aciertos: <span id="clavesOk">${clavesCorrect}</span></div>
+		<div>Errores: <span id="clavesBad">${clavesWrong}</span></div>
+	  </div>
+	`;
 
       const keyHtml = Object.keys(key).map(n => `
         <div class="clavesKeyItem">
@@ -1802,9 +1884,6 @@
       $("feedback").textContent = "";
       $("feedback").className = "feedback";
       $("btnNext").classList.add("hidden");
-
-      const timerEl = $("timer");
-      if(timerEl) timerEl.style.display = "none";
 
       renderSymbolPad();
 
@@ -1939,27 +2018,32 @@
     function startTimer(){
       clearInterval(timerInt);
 
-      const timerEl = $("timer");
-      if(!timerEl) return;
-
       const limit = getQuestionTime();
 
       if(limit === null){
-        timerEl.style.display = "none";
+        const timerEl = $("timer");
+        if(timerEl) timerEl.style.display = "none";
         return;
       }
 
+      if(!$("timer") || !$("timerValue")){
+        restoreDefaultTopHud();
+      }
+
+      let timerEl = $("timer");
       timerEl.style.display = "flex";
+
       secondsLeft = limit;
-      timerEl.textContent = secondsLeft;
+      $("timerValue").textContent = secondsLeft;
       timerEl.className = "timer";
 
       timerInt = setInterval(()=>{
         secondsLeft--;
 
-        timerEl.textContent = secondsLeft;
+        if($("timerValue")) $("timerValue").textContent = secondsLeft;
 
-        if(secondsLeft <= 5){
+        timerEl = $("timer");
+        if(timerEl && secondsLeft <= 5){
           timerEl.className = "timer warn";
         }
 
@@ -1987,6 +2071,19 @@
     }
 
 
+
+    function restoreDefaultTopHud(){
+      const topHud = $("topHud");
+      if(!topHud) return;
+
+      topHud.innerHTML = `
+        <div id="timer" class="timer">
+          <span id="timerValue">20</span>
+        </div>
+        <div id="counter" class="counter">Pregunta 1/2</div>
+      `;
+    }
+
     function showQuestion(){
       const currentQuestion = questions[qIndex];
       answered = false;
@@ -2005,6 +2102,8 @@
         renderClaves();
         return;
       }
+
+      restoreDefaultTopHud();
 
       if(isDigitQuestion(currentQuestion)){
         const mode = (QUESTIONS.digitos && QUESTIONS.digitos[digitModeIndex]) ? QUESTIONS.digitos[digitModeIndex] : {modeName:'Retención de Dígitos'};
@@ -2162,7 +2261,7 @@
           const size = pattern.size || 2;
           cubosCurrent = Array(size * size).fill("E");
           cubosSelectedFace = "W";
-		  cubosSecondsLeft = QUESTIONS.cubos.timeLimit || 45;
+		  cubosSecondsLeft = getCubosTimeLimit(cubosIndex);
           $("feedback").textContent = "";
           $("feedback").className = "feedback";
           showQuestion();
@@ -2182,6 +2281,13 @@
         document.body.classList.remove("practiceMode");
       }
     };
+
+
+    document.addEventListener("dblclick", function(e){
+      if(e.target.closest("button, .cubeGrid, .cubeCell, .cubeTool")){
+        e.preventDefault();
+      }
+    }, {passive:false});
 
     render();
 
