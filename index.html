@@ -1412,8 +1412,46 @@
         p.onclick = () => openPractice(p.dataset.id);
       });
     }
+	
+	function resetPracticeUI(){
+	  speechSynthesis.cancel();
+
+	  answered = false;
+	  digitInput = "";
+	  playingDigits = false;
+
+	  clearInterval(timerInt);
+	  clearInterval(cubosTimerInt);
+	  clearInterval(clavesTimerInt);
+
+	  timerInt = null;
+	  cubosTimerInt = null;
+	  clavesTimerInt = null;
+
+	  $("answers").innerHTML = "";
+	  $("answers").className = "answers";
+
+	  $("validBox").classList.remove("active");
+	  $("validList").innerHTML = "";
+
+	  $("selfCheck").classList.remove("active");
+
+	  $("feedback").textContent = "";
+	  $("feedback").className = "feedback";
+
+	  $("btnNext").classList.add("hidden");
+	  $("btnNext").textContent = "Siguiente";
+	  $("btnNext").className = "primary hidden";
+
+	  $("digitMenu").classList.add("hidden");
+	  $("digitMenu").innerHTML = "";
+	}
+		
+	
 
     function openPractice(id){
+	
+	  resetPracticeUI();
       currentTest = TESTS.find(t => t.id === id);
 
       if(id === "cubos"){
