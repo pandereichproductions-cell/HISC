@@ -667,6 +667,107 @@
       font-weight:900;
     }
 
+    /* ===== RETENCIÓN DE IMÁGENES ===== */
+    .riPanel{
+      display:grid;
+      gap:10px;
+      justify-items:center;
+      width:100%;
+    }
+
+    .riSelected{
+      min-height:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:#fff;
+      color:#111827;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.04em;
+      width:min(100%, 420px);
+    }
+
+    .riLetters{
+      display:grid;
+      gap:7px;
+      width:100%;
+      max-width:100%;
+    }
+
+    .riRow{
+      display:grid;
+      grid-template-columns:repeat(var(--riCols, 4), 1fr);
+      gap:8px;
+      width:100%;
+    }
+
+    .riLetter{
+      min-height:44px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      font-size:18px;
+      font-weight:900;
+      display:grid;
+      place-items:center;
+    }
+
+    .riLetter:active{
+      transform:scale(.98);
+    }
+
+    .riLetter.selected{
+      background:#eff6ff;
+      border-color:#2563eb;
+      box-shadow:0 0 0 2px rgba(37,99,235,.16);
+      color:#2563eb;
+    }
+
+    .riActions{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .riOk,
+    .riDel{
+      min-width:76px;
+      padding:9px 14px;
+      border-radius:10px;
+      font-weight:900;
+    }
+
+    .riOk{
+      background:#2563eb;
+      color:#fff;
+    }
+
+    .riDel{
+      background:#f2f4f7;
+      color:#344054;
+    }
+
+    @media(max-width:560px){
+      .riLetters{
+        gap:6px;
+      }
+
+      .riRow{
+        gap:6px;
+      }
+
+      .riLetter{
+        min-height:40px;
+        font-size:16px;
+      }
+    }
+
 	.answers{
 	  display:grid;
 	  grid-template-columns:repeat(2,1fr);
@@ -1411,8 +1512,35 @@
         { qImg:"img/rv/romp_31.png", correct:[1,3,6], item:"29" }
       ],
       imagenes:[
-        {q:"🐶 · 🚗 · ⭐", sub:"Elige el mismo orden.", a:["🐶 · 🚗 · ⭐","🚗 · 🐶 · ⭐","⭐ · 🚗 · 🐶","🐶 · ⭐ · 🚗"], c:0, h:"Recuerda la primera imagen.", e:"El orden correcto es perro, coche, estrella."},
-        {q:"🍎 · 🏠 · ⚽ · 🌙", sub:"Elige el mismo orden.", a:["🍎 · 🏠 · ⚽ · 🌙","🏠 · 🍎 · ⚽ · 🌙","🍎 · ⚽ · 🏠 · 🌙","🌙 · ⚽ · 🏠 · 🍎"], c:0, h:"Empieza por la manzana.", e:"El orden correcto es 🍎 · 🏠 · ⚽ · 🌙."}
+        { qImg:"img/ri/ri_01.png", rImg:"img/ri/ri_r_01.png", correct:"B", letters:"AB", layout:[2], item:"PA" },
+        { qImg:"img/ri/ri_02.png", rImg:"img/ri/ri_r_02.png", correct:"A", letters:"AB", layout:[2], item:"1" },
+        { qImg:"img/ri/ri_03.png", rImg:"img/ri/ri_r_03.png", correct:"C", letters:"ABCD", layout:[4], item:"2" },
+        { qImg:"img/ri/ri_04.png", rImg:"img/ri/ri_r_04.png", correct:"E", letters:"ABCDE", layout:[5], item:"3" },
+        { qImg:"img/ri/ri_05.png", rImg:"img/ri/ri_r_05.png", correct:"B-A", letters:"AB", layout:[2], item:"PB" },
+        { qImg:"img/ri/ri_06.png", rImg:"img/ri/ri_r_06.png", correct:"D-A", letters:"ABCDE", layout:[5], item:"PC" },
+        { qImg:"img/ri/ri_07.png", rImg:"img/ri/ri_r_07.png", correct:"C-D", letters:"ABCD", layout:[4], item:"4" },
+        { qImg:"img/ri/ri_08.png", rImg:"img/ri/ri_r_08.png", correct:"B-A", letters:"ABCD", layout:[4], item:"5" },
+        { qImg:"img/ri/ri_09.png", rImg:"img/ri/ri_r_09.png", correct:"A-E", letters:"ABCDEF", layout:[6], item:"6" },
+        { qImg:"img/ri/ri_10.png", rImg:"img/ri/ri_r_10.png", correct:"F-B", letters:"ABCDEF", layout:[6], item:"7" },
+        { qImg:"img/ri/ri_11.png", rImg:"img/ri/ri_r_11.png", correct:"A-B-E", letters:"ABCDE", layout:[5], item:"8" },
+        { qImg:"img/ri/ri_12.png", rImg:"img/ri/ri_r_12.png", correct:"B-E-D", letters:"ABCDEF", layout:[6], item:"9" },
+        { qImg:"img/ri/ri_13.png", rImg:"img/ri/ri_r_13.png", correct:"D-F-C", letters:"ABCDEF", layout:[6], item:"10" },
+        { qImg:"img/ri/ri_14.png", rImg:"img/ri/ri_r_14.png", correct:"A-F-E", letters:"ABCDEF", layout:[6], item:"11" },
+        { qImg:"img/ri/ri_15.png", rImg:"img/ri/ri_r_15.png", correct:"F-C-B", letters:"ABCDEF", layout:[6], item:"12" },
+        { qImg:"img/ri/ri_16.png", rImg:"img/ri/ri_r_16.png", correct:"B-H-C", letters:"ABCDEFGH", layout:[4,4], item:"13" },
+        { qImg:"img/ri/ri_17.png", rImg:"img/ri/ri_r_17.png", correct:"A-C-E-F", letters:"ABCDEF", layout:[6], item:"14" },
+        { qImg:"img/ri/ri_18.png", rImg:"img/ri/ri_r_18.png", correct:"B-C-F-D", letters:"ABCDEF", layout:[6], item:"15" },
+        { qImg:"img/ri/ri_19.png", rImg:"img/ri/ri_r_19.png", correct:"G-B-D-F", letters:"ABCDEFGH", layout:[4,4], item:"16" },
+        { qImg:"img/ri/ri_20.png", rImg:"img/ri/ri_r_20.png", correct:"G-D-B-A", letters:"ABCDEFGH", layout:[4,4], item:"17" },
+        { qImg:"img/ri/ri_21.png", rImg:"img/ri/ri_r_21.png", correct:"C-B-I-H", letters:"ABCDEFGHIJ", layout:[5,5], item:"18" },
+        { qImg:"img/ri/ri_22.png", rImg:"img/ri/ri_r_22.png", correct:"D-G-A-I", letters:"ABCDEFGHIJ", layout:[5,5], item:"19" },
+        { qImg:"img/ri/ri_23.png", rImg:"img/ri/ri_r_23.png", correct:"E-F-H-B-A", letters:"ABCDEFGH", layout:[4,4], item:"20" },
+        { qImg:"img/ri/ri_24.png", rImg:"img/ri/ri_r_24.png", correct:"E-G-B-C-H", letters:"ABCDEFGH", layout:[4,4], item:"21" },
+        { qImg:"img/ri/ri_25.png", rImg:"img/ri/ri_r_25.png", correct:"F-B-I-H-D", letters:"ABCDEFGHIJ", layout:[5,5], item:"22" },
+        { qImg:"img/ri/ri_26.png", rImg:"img/ri/ri_r_26.png", correct:"A-C-F-H-K-E", letters:"ABCDEFGHIJKL", layout:[6,6], item:"23" },
+        { qImg:"img/ri/ri_27.png", rImg:"img/ri/ri_r_27.png", correct:"L-B-H-I-J-D", letters:"ABCDEFGHIJKL", layout:[6,6], item:"24" },
+        { qImg:"img/ri/ri_28.png", rImg:"img/ri/ri_r_28.png", correct:"H-B-L-G-C-E-J", letters:"ABCDEFGHIJKL", layout:[6,6], item:"25" },
+        { qImg:"img/ri/ri_29.png", rImg:"img/ri/ri_r_29.png", correct:"G-A-K-C-F-D-I-B", letters:"ABCDEFGHIJKL", layout:[6,6], item:"26" }
       ],
       busquedaSimbolos:[
         {q:"Objetivo: ★", sub:"¿Dónde aparece?", a:["○ △ ★ □","○ △ □ ◇","□ ○ △ ◇","◇ ○ □ △"], c:0, h:"Busca la estrella.", e:"La estrella aparece en la primera opción."},
@@ -1449,6 +1577,8 @@
     let digitInput = "";
     let playingDigits = false;
     let rvSelected = [];
+    let riSelected = [];
+    let riMemoryTimer = null;
     let timerInt = null;
     let secondsLeft = 20;
 
@@ -1523,6 +1653,9 @@
 	  digitInput = "";
 	  playingDigits = false;
 	  rvSelected = [];
+	  riSelected = [];
+	  clearTimeout(riMemoryTimer);
+	  riMemoryTimer = null;
 
 	  clearInterval(timerInt);
 	  clearInterval(cubosTimerInt);
@@ -1588,6 +1721,10 @@
 
     function isRompecabezasTest(){
       return currentTest && currentTest.id === "rompecabezas";
+    }
+
+    function isImagenesTest(){
+      return currentTest && currentTest.id === "imagenes";
     }
 
     function getCubosTimeLimit(index){
@@ -2152,6 +2289,7 @@
     function getQuestionTime(){
       const currentQuestion = questions[qIndex];
       if(isRompecabezasTest()) return 30;
+      if(isImagenesTest()) return null;
       if(!currentQuestion || !currentQuestion.qImg) return null;
 
       const n = qIndex + 1;
@@ -2199,7 +2337,13 @@
 
           const currentQuestion = questions[qIndex];
 
-          if(isRompecabezasTest()){
+    
+      if(isImagenesTest()){
+        renderImagenesMemory(currentQuestion);
+        return;
+      }
+
+      if(isRompecabezasTest()){
             document.querySelectorAll(".rvOption").forEach(btn=>{
               const value = Number(btn.dataset.value);
               if((currentQuestion.correct || []).includes(value)){
@@ -2308,6 +2452,12 @@
 
       $("counter").textContent = `Pregunta ${qIndex + 1}/${questions.length}`;
 
+
+      if(isImagenesTest()){
+        renderImagenesMemory(currentQuestion);
+        return;
+      }
+
       if(isRompecabezasTest()){
         rvSelected = [];
 
@@ -2387,6 +2537,175 @@
       $("feedback").className = ok ? "feedback ok" : "feedback bad";
       $("btnNext").classList.remove("hidden");
       $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+    }
+
+
+    function renderImagenesMemory(currentQuestion){
+      riSelected = [];
+      clearInterval(timerInt);
+      clearTimeout(riMemoryTimer);
+
+      $("counter").textContent = `Pregunta ${qIndex + 1}/${questions.length}`;
+      $("timer").style.display = "flex";
+      $("timer").className = "timer";
+      $("timerValue").textContent = "5";
+
+      $("qText").innerHTML = `<img class="matrixImg" src="${currentQuestion.qImg}" alt="Retención de imágenes ${currentQuestion.item || (qIndex + 1)}">`;
+      $("qSub").textContent = "Recuerda estas imágenes en orden.";
+
+      $("answers").className = "answers";
+      $("answers").innerHTML = "";
+
+      $("validBox").classList.remove("active");
+      $("selfCheck").classList.remove("active");
+      $("validList").innerHTML = "";
+
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      $("btnNext").classList.add("hidden");
+
+      let memSeconds = 5;
+      timerInt = setInterval(()=>{
+        memSeconds--;
+        if($("timerValue")) $("timerValue").textContent = memSeconds;
+
+        if(memSeconds <= 0){
+          clearInterval(timerInt);
+          showImagenesResponse(currentQuestion);
+        }
+      },1000);
+    }
+
+    function showImagenesResponse(currentQuestion){
+      if($("timer")) $("timer").style.display = "none";
+
+      $("qText").innerHTML = `<img class="matrixImg" src="${currentQuestion.rImg}" alt="Opciones de retención de imágenes ${currentQuestion.item || (qIndex + 1)}">`;
+      $("qSub").textContent = "Elige las letras en el mismo orden y pulsa OK.";
+
+      const letters = String(currentQuestion.letters || "ABCDEFGHIJKL").split("");
+      const layout = Array.isArray(currentQuestion.layout) && currentQuestion.layout.length
+        ? currentQuestion.layout
+        : [letters.length];
+
+      let pos = 0;
+      const letterRows = layout.map(cols => {
+        const rowLetters = letters.slice(pos, pos + cols);
+        pos += cols;
+
+        return `
+          <div class="riRow" style="--riCols:${cols}">
+            ${rowLetters.map(l => `<button class="riLetter" data-letter="${l}">${l}</button>`).join("")}
+          </div>
+        `;
+      }).join("");
+
+      $("answers").className = "riPanel";
+      $("answers").innerHTML = `
+        <div class="riSelected" id="riSelectedText">—</div>
+        <div class="riLetters">
+          ${letterRows}
+        </div>
+        <div class="riActions">
+          <button class="riDel" id="btnRiDel">Borrar</button>
+          <button class="riOk" id="btnRiOk">OK</button>
+        </div>
+      `;
+
+      document.querySelectorAll(".riLetter").forEach(btn=>{
+        btn.onclick = () => addRiLetter(btn.dataset.letter);
+      });
+
+      $("btnRiDel").onclick = removeRiLetter;
+      $("btnRiOk").onclick = checkRiAnswer;
+
+      updateRiSelectedText();
+    }
+
+    function addRiLetter(letter){
+      if(answered) return;
+      const currentQuestion = questions[qIndex];
+      const maxLen = String(currentQuestion.correct || "").split("-").filter(Boolean).length;
+
+      if(riSelected.includes(letter)){
+        $("feedback").textContent = `La letra ${letter} ya está elegida.`;
+        $("feedback").className = "feedback bad";
+        return;
+      }
+
+      if(riSelected.length >= maxLen){
+        $("feedback").textContent = `Ya has elegido ${maxLen} letra${maxLen === 1 ? "" : "s"}.`;
+        $("feedback").className = "feedback bad";
+        return;
+      }
+
+      riSelected.push(letter);
+      const btn = document.querySelector(`.riLetter[data-letter="${letter}"]`);
+      if(btn) btn.classList.add("selected");
+
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      updateRiSelectedText();
+    }
+
+    function removeRiLetter(){
+      if(answered) return;
+      const removed = riSelected.pop();
+      if(removed){
+        const btn = document.querySelector(`.riLetter[data-letter="${removed}"]`);
+        if(btn) btn.classList.remove("selected");
+      }
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      updateRiSelectedText();
+    }
+
+    function updateRiSelectedText(){
+      const el = $("riSelectedText");
+      if(el) el.textContent = riSelected.length ? riSelected.join("-") : "—";
+    }
+
+    function checkRiAnswer(){
+      if(answered) return;
+
+      const currentQuestion = questions[qIndex];
+      const correct = String(currentQuestion.correct || "").split("-").filter(Boolean);
+
+      if(riSelected.length !== correct.length){
+        $("feedback").textContent = `Elige ${correct.length} letra${correct.length === 1 ? "" : "s"}.`;
+        $("feedback").className = "feedback bad";
+        return;
+      }
+
+      answered = true;
+      clearInterval(timerInt);
+
+      const exact = riSelected.join("-") === correct.join("-");
+      const sameLetters = sameLetterSet(riSelected, correct);
+
+      let points = 0;
+      if(exact) points = 2;
+      else if(sameLetters) points = 1;
+
+      if(points === 2){
+        $("feedback").textContent = "¡Correcto! 2 puntos";
+        $("feedback").className = "feedback ok";
+      } else if(points === 1){
+        $("feedback").textContent = `Mismas imágenes, pero en otro orden. 1 punto. Correcta: ${correct.join("-")}`;
+        $("feedback").className = "feedback bad";
+      } else {
+        $("feedback").textContent = `No es correcto. 0 puntos. Correcta: ${correct.join("-")}`;
+        $("feedback").className = "feedback bad";
+      }
+
+      $("btnNext").classList.remove("hidden");
+      $("btnNext").textContent = qIndex < questions.length - 1 ? "Siguiente" : "Terminar";
+    }
+
+    function sameLetterSet(a,b){
+      if(!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+      const aa = [...a].sort().join("");
+      const bb = [...b].sort().join("");
+      return aa === bb;
     }
 
     function toggleRvOption(value){
@@ -2485,6 +2804,7 @@
       clearInterval(timerInt);
       clearInterval(clavesTimerInt);
       clearInterval(cubosTimerInt);
+      clearTimeout(riMemoryTimer);
       if("speechSynthesis" in window) speechSynthesis.cancel();
       cubosRunning = false;
       clavesRunning = false;
@@ -2500,6 +2820,7 @@
       clearInterval(timerInt);
       clearInterval(clavesTimerInt);
       clearInterval(cubosTimerInt);
+      clearTimeout(riMemoryTimer);
       if("speechSynthesis" in window) speechSynthesis.cancel();
       playingDigits = false;
 
