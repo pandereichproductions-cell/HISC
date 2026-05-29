@@ -32,7 +32,14 @@
     .abbr{font-size:12px;font-weight:900;color:#2563eb;background:#eff6ff;padding:3px 6px;border-radius:999px}
     .name{font-size:14px;font-weight:750;white-space:nowrap}
     .tag{padding:3px 6px;border-radius:999px;background:var(--cit);color:var(--citText);font-size:11px;font-weight:900}
-    .practice{display:none;background:white;border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:16px}
+    .practice{
+	  display:none;
+	  background:white;
+	  border:1px solid var(--line);
+	  border-radius:var(--radius);
+	  padding:6px;
+	  margin-top:16px;
+	}
     .practice.active{display:block}
     .practiceTop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
     .practiceTop h2{margin:0;font-size:20px;letter-spacing:-.03em}
@@ -853,6 +860,17 @@
 
 	.question{
 	  min-height:280px;
+	  padding:3px;
+	}
+	
+	.matrixImg{
+	  display:block;
+	  width:100%;
+	  max-width:100%;
+	  max-height:68vh;
+	  object-fit:contain;
+	  margin:0 auto;
+	  border-radius:10px;
 	}
 
 	@media(max-width:560px){
@@ -878,10 +896,11 @@
 		  padding:8px;
 		}
 
-		.matrixImg{
-		  max-height:none;
-		  width:100%;
-		}
+	 .matrixImg{
+	  width:100%;
+	  max-height:72vh;
+	  object-fit:contain;
+	 }
 
 	  .mode button{
 		flex:1;
